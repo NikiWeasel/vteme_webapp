@@ -1,52 +1,116 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vteme_tg_miniapp/screens/home_screen.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-final theme = ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(
-    brightness: Brightness.light,
-    seedColor: const Color.fromARGB(255, 154, 0, 165),
-  ),
-  textTheme: GoogleFonts.rubikTextTheme(),
-  // elevatedButtonTheme: ElevatedButtonThemeData(
-  //   style: ButtonStyle(
-  //       backgroundColor: WidgetStateProperty.all<Color>(
-  //           Color.fromARGB(255, 236, 200, 200)),
-  //       foregroundColor: WidgetStateProperty.all<Color>(Colors.white)),
-  // )
-);
+import 'package:vteme_tg_miniapp/core/repository/local_appointments_repository.dart';
+import 'package:vteme_tg_miniapp/core/repository/local_regulations_repository.dart';
+import 'package:vteme_tg_miniapp/core/repository/local_employees_repository.dart';
+import 'package:vteme_tg_miniapp/core/repository/local_portfolio_photos_repository.dart';
+import 'package:vteme_tg_miniapp/core/repository/actions_appointment_repository.dart';
+
+import 'core/app_router.dart';
+import 'core/bloc/actions_appointments/actions_appointment_bloc.dart';
+import 'core/bloc/fetch_appointments/local_appointments_bloc.dart';
+import 'core/bloc/fetch_emloyees/local_employees_bloc.dart';
+import 'core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
+import 'core/bloc/fetch_regulations/local_regulations_bloc.dart';
+import 'core/theme.dart';
+import 'firebase_options.dart';
+
+// try {
+//   if (TelegramWebApp.instance.isSupported) {
+//     TelegramWebApp.instance.ready();
+//     Future.delayed(const Duration(seconds: 1), TelegramWebApp.instance.expand);
+//   }
+// } catch (e) {
+//   print("Error happened in Flutter while loading Telegram $e");
+//   // add delay for 'Telegram not loading sometimes' bug
+//   await Future.delayed(const Duration(milliseconds: 200));
+//   main();
+//   return;
+// }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await initializeDateFormatting('ru', null);
 
-  // try {
-  //   if (TelegramWebApp.instance.isSupported) {
-  //     TelegramWebApp.instance.ready();
-  //     Future.delayed(const Duration(seconds: 1), TelegramWebApp.instance.expand);
-  //   }
-  // } catch (e) {
-  //   print("Error happened in Flutter while loading Telegram $e");
-  //   // add delay for 'Telegram not loading sometimes' bug
-  //   await Future.delayed(const Duration(milliseconds: 200));
-  //   main();
-  //   return;
-  // }
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  runApp(const MyApp());
-}
+  // final LocalPortfolioPhotosRepository fetchDataRepository =
+  //     LocalPortfolioPhotosRepository(
+  //         firebaseAuth: firebaseAuth, firebaseStorage: firebaseStorage);
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final LocalEmployeesRepository localEmployeesRepository =
+      LocalEmployeesRepository(
+    firebaseFirestore: firebaseFirestore,
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Telegram Web App Example',
-      // theme: TelegramThemeUtil.getTheme(TelegramWebApp.instance),
-      theme: theme,
-      home: const HomeScreen(),
-    );
-  }
+  final LocalPortfolioPhotosRepository fetchDataRepository =
+      LocalPortfolioPhotosRepository(
+          userUid: '', firebaseStorage: firebaseStorage);
+
+  final LocalAppointmentsRepository localAppointmentsRepository =
+      LocalAppointmentsRepository(
+          firebaseFirestore: firebaseFirestore,
+          firebaseStorage: firebaseStorage);
+
+  final LocalRegulationsRepository localRegulationsRepository =
+      LocalRegulationsRepository(
+    firebaseFirestore: firebaseFirestore,
+  );
+
+  final actionsAppointmentRepository = ActionsAppointmentRepository(
+    firebaseFirestore: firebaseFirestore,
+  );
+
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<LocalEmployeesBloc>(
+        create: (context) => LocalEmployeesBloc(localEmployeesRepository)
+          ..add(FetchAllEmployeesData()),
+      ),
+      BlocProvider<LocalAppointmentsBloc>(
+        create: (context) => LocalAppointmentsBloc(localAppointmentsRepository)
+          ..add(FetchAppointmentsData()),
+      ),
+      BlocProvider<LocalRegulationsBloc>(
+        create: (context) => LocalRegulationsBloc(localRegulationsRepository)
+          ..add(FetchRegulationsData()),
+      ),
+      BlocProvider<LocalPortfolioPhotosBloc>(
+        create: (context) => LocalPortfolioPhotosBloc(fetchDataRepository)
+          ..add(FetchPortfolioPhotosData()),
+      ),
+      BlocProvider<ActionsAppointmentBloc>(
+        create: (context) =>
+            ActionsAppointmentBloc(actionsAppointmentRepository),
+      ),
+    ],
+    child: MaterialApp.router(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'), // English
+        Locale('ru', 'RU'), // Russian
+      ],
+      theme: getTheme(0xFF9A00A5),
+      routerConfig: router,
+      // home: const App(),
+    ),
+  ));
 }
