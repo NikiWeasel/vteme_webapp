@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vteme_tg_miniapp/screens/home_screen.dart';
+import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,14 +16,14 @@ import 'package:vteme_tg_miniapp/core/repository/local_employees_repository.dart
 import 'package:vteme_tg_miniapp/core/repository/local_portfolio_photos_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/actions_appointment_repository.dart';
 
-import 'core/app_router.dart';
-import 'core/bloc/actions_appointments/actions_appointment_bloc.dart';
-import 'core/bloc/fetch_appointments/local_appointments_bloc.dart';
-import 'core/bloc/fetch_emloyees/local_employees_bloc.dart';
-import 'core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
-import 'core/bloc/fetch_regulations/local_regulations_bloc.dart';
-import 'core/theme.dart';
-import 'firebase_options.dart';
+import 'package:vteme_tg_miniapp/core/app_router.dart';
+import 'package:vteme_tg_miniapp/core/bloc/actions_appointments/actions_appointment_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_emloyees/local_employees_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
+import 'package:vteme_tg_miniapp/core/theme.dart';
+import 'package:vteme_tg_miniapp/firebase_options.dart';
 
 // try {
 //   if (TelegramWebApp.instance.isSupported) {
@@ -53,21 +53,21 @@ void main() async {
   //         firebaseAuth: firebaseAuth, firebaseStorage: firebaseStorage);
 
   final LocalEmployeesRepository localEmployeesRepository =
-      LocalEmployeesRepository(
+  LocalEmployeesRepository(
     firebaseFirestore: firebaseFirestore,
   );
 
   final LocalPortfolioPhotosRepository fetchDataRepository =
-      LocalPortfolioPhotosRepository(
-          userUid: '', firebaseStorage: firebaseStorage);
+  LocalPortfolioPhotosRepository(
+      firebaseStorage: firebaseStorage);
 
   final LocalAppointmentsRepository localAppointmentsRepository =
-      LocalAppointmentsRepository(
-          firebaseFirestore: firebaseFirestore,
-          firebaseStorage: firebaseStorage);
+  LocalAppointmentsRepository(
+      firebaseFirestore: firebaseFirestore,
+      firebaseStorage: firebaseStorage);
 
   final LocalRegulationsRepository localRegulationsRepository =
-      LocalRegulationsRepository(
+  LocalRegulationsRepository(
     firebaseFirestore: firebaseFirestore,
   );
 
@@ -78,19 +78,23 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<LocalEmployeesBloc>(
-        create: (context) => LocalEmployeesBloc(localEmployeesRepository)
+        create: (context) =>
+        LocalEmployeesBloc(localEmployeesRepository)
           ..add(FetchAllEmployeesData()),
       ),
       BlocProvider<LocalAppointmentsBloc>(
-        create: (context) => LocalAppointmentsBloc(localAppointmentsRepository)
+        create: (context) =>
+        LocalAppointmentsBloc(localAppointmentsRepository)
           ..add(FetchAppointmentsData()),
       ),
       BlocProvider<LocalRegulationsBloc>(
-        create: (context) => LocalRegulationsBloc(localRegulationsRepository)
+        create: (context) =>
+        LocalRegulationsBloc(localRegulationsRepository)
           ..add(FetchRegulationsData()),
       ),
       BlocProvider<LocalPortfolioPhotosBloc>(
-        create: (context) => LocalPortfolioPhotosBloc(fetchDataRepository)
+        create: (context) =>
+        LocalPortfolioPhotosBloc(fetchDataRepository)
           ..add(FetchPortfolioPhotosData()),
       ),
       BlocProvider<ActionsAppointmentBloc>(

@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:vteme_tg_miniapp/screens/home_screen.dart';
+import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
 
 get router {
   return GoRouter(

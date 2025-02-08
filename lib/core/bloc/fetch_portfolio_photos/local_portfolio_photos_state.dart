@@ -8,7 +8,7 @@ final class LocalPortfolioPhotosInitial extends LocalPortfolioPhotosState {}
 class LocalPortfolioPhotosLoadingState extends LocalPortfolioPhotosState {}
 
 class LocalPortfolioPhotosLoadedState extends LocalPortfolioPhotosState {
-  final List<String> downloadUrls;
+  final Map<String, List<String>> downloadUrls;
 
   LocalPortfolioPhotosLoadedState({required this.downloadUrls});
 }

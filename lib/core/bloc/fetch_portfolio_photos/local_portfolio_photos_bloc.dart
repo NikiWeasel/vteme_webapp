@@ -10,7 +10,7 @@ part 'local_portfolio_photos_state.dart';
 class LocalPortfolioPhotosBloc
     extends Bloc<FetchPortfolioPhotosEvent, LocalPortfolioPhotosState> {
   final LocalPortfolioPhotosRepository localPortfolioPhotosRepository;
-  List<String> localUrls = [];
+  Map<String, List<String>> localUrls = {};
 
   LocalPortfolioPhotosBloc(this.localPortfolioPhotosRepository)
       : super(LocalPortfolioPhotosInitial()) {
@@ -18,30 +18,6 @@ class LocalPortfolioPhotosBloc
       emit(LocalPortfolioPhotosLoadingState());
       try {
         localUrls = await localPortfolioPhotosRepository.fetchPortfolioPhotos();
-        emit(LocalPortfolioPhotosLoadedState(downloadUrls: localUrls));
-      } catch (e) {
-        emit(LocalPortfolioPhotosErrorState(errorMessage: e.toString()));
-      }
-    });
-
-    on<AddLocalPortfolioPhoto>((event, emit) async {
-      emit(LocalPortfolioPhotosLoadingState());
-      try {
-        localUrls = localPortfolioPhotosRepository.addLocalPortfolioPhoto(
-            localUrls, event.url);
-
-        emit(LocalPortfolioPhotosLoadedState(downloadUrls: localUrls));
-      } catch (e) {
-        emit(LocalPortfolioPhotosErrorState(errorMessage: e.toString()));
-      }
-    });
-
-    on<DeleteLocalPortfolioPhoto>((event, emit) async {
-      emit(LocalPortfolioPhotosLoadingState());
-      try {
-        localUrls = localPortfolioPhotosRepository.deleteLocalPortfolioPhoto(
-            localUrls, event.url);
-
         emit(LocalPortfolioPhotosLoadedState(downloadUrls: localUrls));
       } catch (e) {
         emit(LocalPortfolioPhotosErrorState(errorMessage: e.toString()));
