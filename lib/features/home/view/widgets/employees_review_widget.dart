@@ -56,38 +56,43 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
     var widgetHeight = 83.0 * widget.emps.length;
     var height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
 
-    return Stack(
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: EdgeInsets.only(left: width - 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              for (int i = 0; i < widget.emps.length; i++) ...[
-                EmployeeProfileWidget(
-                  employee: widget.emps[i],
-                  isSelected: empBoolList[i],
-                  selectEmployee: () {
-                    selectEmployee(i);
-                  },
-                ),
-                const SizedBox(
-                  height: 8,
-                )
+        EmployeeDetails(
+          height: height,
+          width: width * 2 / 3,
+          employee: activeEmployeeDetails,
+          photoUrls:
+              widget.portfolioUrls[activeEmployeeDetails.employeeId] ?? [],
+        ),
+        const SizedBox(
+          width: 8,
+        ),
+        SizedBox(
+          width: width / 3,
+          height: height,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int i = 0; i < widget.emps.length; i++) ...[
+                  EmployeeProfileWidget(
+                    employee: widget.emps[i],
+                    isSelected: empBoolList[i],
+                    selectEmployee: () {
+                      selectEmployee(i);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  )
+                ],
               ],
-            ],
+            ),
           ),
         ),
-        Positioned(
-            top: 0,
-            left: 0,
-            child: EmployeeDetails(
-              height: height,
-              width: width,
-              employee: activeEmployeeDetails,
-              photoUrls:
-                  widget.portfolioUrls[activeEmployeeDetails.employeeId] ?? [],
-            )),
       ],
     );
   }

@@ -30,7 +30,16 @@ class RegulationTile extends StatelessWidget {
         ),
         title: Text(regulation.name),
         subtitle: Text('${regulation.duration.toString()} мин'),
-        trailing: Text('${regulation.cost.toString()} руб'),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('${regulation.cost.toString()} руб'),
+            const SizedBox(
+              width: 24,
+            ),
+            ElevatedButton(onPressed: () {}, child: const Text('Записаться')),
+          ],
+        ),
       ),
     );
   }

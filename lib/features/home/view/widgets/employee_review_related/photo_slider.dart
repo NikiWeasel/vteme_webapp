@@ -14,7 +14,13 @@ class PhotoSlider extends StatefulWidget {
 
 class _PhotoSliderState extends State<PhotoSlider> {
   int _current = 0;
-  final CarouselSliderController _controller = CarouselSliderController();
+  late CarouselSliderController _controller;
+
+  @override
+  void initState() {
+    _controller = CarouselSliderController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +34,7 @@ class _PhotoSliderState extends State<PhotoSlider> {
           ),
           // width: 200,
           child: CarouselSlider(
+            carouselController: _controller,
             options: CarouselOptions(
                 height: widget.height,
                 viewportFraction: 1.0,
@@ -63,7 +70,9 @@ class _PhotoSliderState extends State<PhotoSlider> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: widget.photoUrls.asMap().entries.map((entry) {
               return GestureDetector(
-                onTap: () => _controller.animateToPage(entry.key),
+                onTap: () {
+                  _controller.animateToPage(entry.key);
+                },
                 child: Container(
                   width: 12.0,
                   height: 12.0,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/photo_slider.dart';
+import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/rectangle_profile_header.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/square_avatar.dart';
 
 class EmployeeDetails extends StatelessWidget {
@@ -33,85 +34,47 @@ class EmployeeDetails extends StatelessWidget {
             SizedBox(
               width: width * 2 / 3 - 32,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SquareAvatar(
-                                size: 70,
-                                foregroundImage:
-                                    NetworkImage(employee.imageUrl),
-                                child: const Icon(
-                                  Icons.person,
-                                  size: 70,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Flexible(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${employee.name} ${employee.surname}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                              fontWeight: FontWeight.bold),
-                                      overflow: TextOverflow.fade,
-                                      softWrap: false,
-                                    ),
-                                    Text(
-                                      employee.number,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface),
-                                      overflow: TextOverflow.fade,
-                                      softWrap: false,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                            ],
-                          ),
-                        ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: RectangleProfileHeader(
+                        employee: employee,
                       ),
-                      ElevatedButton(
-                          onPressed: () {}, child: const Text('Записаться'))
-                    ],
+                    ),
                   ),
                   const SizedBox(
                     height: 16,
                   ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        employee.description,
-                        // maxLines: false,
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
-                        overflow: TextOverflow.fade,
-                        softWrap: true,
+                  Expanded(
+                    child: SizedBox(
+                      width: width * 2 / 3 - 32,
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            employee.description,
+                            // maxLines: false,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                            overflow: TextOverflow.fade,
+                            softWrap: true,
+                          ),
+                        ),
                       ),
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: ElevatedButton(
+                        onPressed: () {}, child: const Text('Записаться')),
                   )
                 ],
               ),

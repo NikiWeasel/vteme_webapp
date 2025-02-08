@@ -85,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -95,9 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .titleLarge!
                                     .copyWith(fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 8,
                             ),
                             EmployeesReviewWidget(
                                 emps: emps, portfolioUrls: urls),
@@ -115,9 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxWidth:
-                                        MediaQuery.of(context).size.width *
-                                            2 /
-                                            3,
+                                        MediaQuery.of(context).size.width / 2,
                                   ),
                                   child: RegulationTile(regulation: r)),
                           ]),
