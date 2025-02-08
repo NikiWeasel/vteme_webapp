@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
-import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_details_related/photo_slider.dart';
-import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_details_related/square_avatar.dart';
+import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/photo_slider.dart';
+import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/square_avatar.dart';
 
 class EmployeeDetails extends StatelessWidget {
   const EmployeeDetails(

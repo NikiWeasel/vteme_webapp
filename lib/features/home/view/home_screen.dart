@@ -8,8 +8,7 @@ import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfoli
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
-import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_details_related/employee_profile_widget.dart';
-import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_details_related/employees_review_widget.dart';
+import 'package:vteme_tg_miniapp/features/home/view/widgets/employees_review_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
