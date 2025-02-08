@@ -55,7 +55,6 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
     var width = MediaQuery.of(context).size.width / 2;
     var widgetHeight = 83.0 * widget.emps.length;
     var height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
-    print(height);
 
     return Stack(
       children: [
@@ -76,9 +75,6 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
                   height: 8,
                 )
               ],
-              SizedBox(
-                height: height,
-              )
             ],
           ),
         ),

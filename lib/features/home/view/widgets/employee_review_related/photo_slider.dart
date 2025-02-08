@@ -18,7 +18,6 @@ class _PhotoSliderState extends State<PhotoSlider> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.height);
     return Stack(
       alignment: Alignment.center,
       children: [

@@ -19,8 +19,6 @@ class EmployeeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(width);
-    print('width');
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),

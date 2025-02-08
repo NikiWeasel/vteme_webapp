@@ -8,7 +8,9 @@ import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfoli
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
+import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employees_review_widget.dart';
+import 'package:vteme_tg_miniapp/features/home/view/widgets/regulation_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,10 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
             return BlocBuilder<LocalRegulationsBloc, FetchRegulationsState>(
               builder: (context, regsState) {
                 List<Employee> emps = [];
+                List<Regulation> regs = [];
                 Map<String, List<String>> urls = {};
 
                 if (portfolioUrlsState is LocalPortfolioPhotosLoadedState) {
                   urls = portfolioUrlsState.downloadUrls;
+                }
+                if (regsState is LocalRegulationsLoadedState) {
+                  regs = regsState.regulations;
                 }
                 if (empState is LocalEmployeesError) {
                   return Text(empState.errorMessage);
@@ -78,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       alignment: Alignment.center,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -95,6 +101,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             EmployeesReviewWidget(
                                 emps: emps, portfolioUrls: urls),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Услуги (${regs.length}): ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            for (var r in regs)
+                              ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width *
+                                            2 /
+                                            3,
+                                  ),
+                                  child: RegulationTile(regulation: r)),
                           ]),
                     ),
                   ),
