@@ -87,6 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            Image.asset(
+                              'assets/images/logo.png',
+                              height: 70,
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -116,6 +120,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         MediaQuery.of(context).size.width / 2,
                                   ),
                                   child: RegulationTile(regulation: r)),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Где нас найти:',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ]),
                     ),
                   ),
