@@ -20,6 +20,8 @@ class EmployeeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var descriptionWidth = width * 2 / 3 - 32;
+
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
@@ -32,14 +34,14 @@ class EmployeeDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: width * 2 / 3 - 32,
+              width: descriptionWidth,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: double.infinity,
                     child: Padding(
-                      padding: const EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: RectangleProfileHeader(
                         employee: employee,
                       ),
@@ -50,22 +52,29 @@ class EmployeeDetails extends StatelessWidget {
                   ),
                   Expanded(
                     child: SizedBox(
-                      width: width * 2 / 3 - 32,
+                      width: descriptionWidth,
                       child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            employee.description,
-                            // maxLines: false,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                            overflow: TextOverflow.fade,
-                            softWrap: true,
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: employee.description == ''
+                                ? const Padding(
+                                    padding: EdgeInsets.only(top: 100),
+                                    child: Center(child: Text('Нет описания')),
+                                  )
+                                : Text(
+                                    employee.description,
+                                    // maxLines: false,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: true,
+                                  ),
                           ),
                         ),
                       ),

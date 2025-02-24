@@ -8,6 +8,6 @@ ThemeData getTheme(int seedColor) {
       brightness: Brightness.light,
       seedColor: Color(seedColor),
     ),
-    textTheme: GoogleFonts.rubikTextTheme(),
+    textTheme: GoogleFonts.montserratTextTheme(),
   );
 }

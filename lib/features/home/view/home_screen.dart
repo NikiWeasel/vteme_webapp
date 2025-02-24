@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_emloyees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_emloyees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employees_review_widget.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/regulation_tile.dart';
+import 'package:vteme_tg_miniapp/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,6 +53,13 @@ class _HomeScreenState extends State<HomeScreen> {
     //   return Text('Error');
     // }
     // TelegramWebApp.instance.initData.;
+
+    launchURL() async {
+      final Uri url = Uri.parse(kMapUrl);
+      if (!await launchUrl(url)) {
+        throw Exception('Could not launch $url');
+      }
+    }
 
     return BlocBuilder<LocalPortfolioPhotosBloc, LocalPortfolioPhotosState>(
       builder: (context, portfolioUrlsState) {
@@ -94,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Наши специалисты:',
+                                'Наши специалисты',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -104,15 +114,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             EmployeesReviewWidget(
                                 emps: emps, portfolioUrls: urls),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Услуги (${regs.length}): ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Услуги ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(
+                                        text: '${regs.length}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .color
+                                                  ?.withOpacity(0.5),
+                                            ),
+                                      )
+                                    ],
+                                  ),
+                                )),
                             for (var r in regs)
                               ConstrainedBox(
                                   constraints: BoxConstraints(
@@ -123,13 +153,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Где нас найти:',
+                                'Где нас найти',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
                                     .copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  // context.push('/map');
+                                  launchURL();
+                                },
+                                child: Text('где')),
                           ]),
                     ),
                   ),

@@ -27,42 +27,76 @@ class _PhotoSliderState extends State<PhotoSlider> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            color: Theme.of(context).colorScheme.surface,
-          ),
+        Card(
+          // decoration: BoxDecoration(
+          //   borderRadius: BorderRadius.circular(6),
+          //   color: Theme.of(context).colorScheme.surface,
+          // ),
           // width: 200,
-          child: CarouselSlider(
-            carouselController: _controller,
-            options: CarouselOptions(
-                height: widget.height,
-                viewportFraction: 1.0,
-                enlargeCenterPage: false,
-                autoPlay: true,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _current = index;
-                  });
-                }),
-            items: widget.photoUrls
-                .map((item) => ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        child: Center(
-                            child: Image.network(
-                          item,
-                          fit: BoxFit.cover,
-                          height: widget.height,
-                        )),
-                      ),
-                    ))
-                .toList(),
-          ),
+          child: widget.photoUrls.isEmpty
+              ? const Center(
+                  child: Icon(Icons.no_photography),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CarouselSlider(
+                    carouselController: _controller,
+                    options: CarouselOptions(
+                        height: widget.height,
+                        viewportFraction: 1.0,
+                        enlargeCenterPage: false,
+                        autoPlay: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        }),
+                    items: widget.photoUrls
+                        .map((item) => Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                              child: Center(
+                                  child: Image.network(
+                                item,
+                                fit: BoxFit.cover,
+                                height: widget.height,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child; // Когда изображение загружено, оно отображается.
+                                  }
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primaryContainer
+                                            .withOpacity(0.5),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(0.5))),
+                                    height: MediaQuery.of(context).size.height,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                (loadingProgress
+                                                        .expectedTotalBytes ??
+                                                    1)
+                                            : null, // Прогресс загрузки, если известен размер.
+                                      ),
+                                    ),
+                                  );
+                                },
+                              )),
+                            ))
+                        .toList(),
+                  ),
+                ),
         ),
         Positioned(
           bottom: 5,

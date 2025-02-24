@@ -78,12 +78,15 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 for (int i = 0; i < widget.emps.length; i++) ...[
-                  EmployeeProfileWidget(
-                    employee: widget.emps[i],
-                    isSelected: empBoolList[i],
-                    selectEmployee: () {
-                      selectEmployee(i);
-                    },
+                  SizedBox(
+                    width: double.infinity,
+                    child: EmployeeProfileWidget(
+                      employee: widget.emps[i],
+                      isSelected: empBoolList[i],
+                      selectEmployee: () {
+                        selectEmployee(i);
+                      },
+                    ),
                   ),
                   const SizedBox(
                     height: 8,
