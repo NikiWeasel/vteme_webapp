@@ -53,6 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //   return Text('Error');
     // }
     // TelegramWebApp.instance.initData.;
+    double activeWidth = MediaQuery.of(context).size.width <= 800
+        ? MediaQuery.of(context).size.width
+        : 800;
 
     launchURL() async {
       final Uri url = Uri.parse(kMapUrl);
@@ -97,23 +100,76 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Image.asset(
-                              'assets/images/logo.png',
-                              height: 70,
+                            SizedBox(
+                              width: activeWidth,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo.png',
+                                      height: 70,
+                                    ),
+                                    const Spacer(),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'г Хабаровск, ул Нерчинская, 6',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall,
+                                        ),
+                                        TextButton(
+                                            onPressed: launchURL,
+                                            child: Text(
+                                              'Показать на карте',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall,
+                                            ))
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Наши специалисты',
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(fontWeight: FontWeight.bold),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Специалисты ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                              fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: '${emps.length}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge!
+                                                .color
+                                                ?.withOpacity(0.5),
+                                          ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                            EmployeesReviewWidget(
-                                emps: emps, portfolioUrls: urls),
+                            SizedBox(
+                              width: activeWidth,
+                              child: EmployeesReviewWidget(
+                                  emps: emps, portfolioUrls: urls),
+                            ),
                             Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: RichText(
@@ -121,28 +177,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       TextSpan(
                                         text: 'Услуги ',
-                                        style: Theme
-                                            .of(context)
+                                        style: Theme.of(context)
                                             .textTheme
                                             .titleLarge!
                                             .copyWith(
-                                            fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold),
                                       ),
                                       TextSpan(
                                         text: '${regs.length}',
-                                        style: Theme
-                                            .of(context)
+                                        style: Theme.of(context)
                                             .textTheme
                                             .titleLarge!
                                             .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .color
-                                              ?.withOpacity(0.5),
-                                        ),
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .color
+                                                  ?.withOpacity(0.5),
+                                            ),
                                       )
                                     ],
                                   ),
@@ -150,35 +203,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             for (var r in regs)
                               ConstrainedBox(
                                   constraints: BoxConstraints(
-                                    maxWidth:
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width / 2,
+                                    maxWidth: activeWidth,
                                   ),
-                                  child: RegulationTile(
-                                    regulation: r, onPressed: () {
-                                    context.push('/schedule_appo', extra: {
-                                      'service': r
-                                    });
-                                  },)),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Где нас найти',
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  // context.push('/map');
-                                  launchURL();
-                                },
-                                child: Text('где')),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: RegulationTile(
+                                      regulation: r,
+                                      onPressed: () {
+                                        context.push('/schedule_appo',
+                                            extra: {'service': r});
+                                      },
+                                    ),
+                                  )),
                           ]),
                     ),
                   ),

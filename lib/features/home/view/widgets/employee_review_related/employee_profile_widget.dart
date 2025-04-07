@@ -16,6 +16,10 @@ class EmployeeProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double activeWidth = MediaQuery.of(context).size.width <= 800
+        ? MediaQuery.of(context).size.width
+        : 800;
+
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: selectEmployee,
@@ -33,33 +37,35 @@ class EmployeeProfileWidget extends StatelessWidget {
                 foregroundImage: NetworkImage(employee.imageUrl),
                 child: const Icon(Icons.person),
               ),
-              const SizedBox(
-                width: 8,
-              ),
-              Flexible(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${employee.name} ${employee.surname}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
-                    Text(
-                      employee.number,
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                    ),
-                  ],
+              if (activeWidth >= 800) ...[
+                const SizedBox(
+                  width: 8,
                 ),
-              )
+                Flexible(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${employee.name} ${employee.surname}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                      Text(
+                        employee.number,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ],
           ),
         ),

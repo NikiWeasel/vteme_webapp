@@ -16,31 +16,40 @@ class ScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: true
-          ? BlocBuilder<LocalEmployeesBloc, LocalEmployeesState>(
-              builder: (context, state) {
-                return EmployeeSelectionContent(
-                  employees:
-                      (state is LocalEmployeesLoaded) ? state.employees : [],
-                );
-              },
-            )
-          : Column(
-              children: [
-                const Text('Новая запись'),
-                Wrap(
-                  children: [
-                    AppoTypeWidget(
-                        text: 'Выбрать услуги',
-                        onTap: () {
-                          // context.pu
-                        }),
-                    AppoTypeWidget(text: 'Выбрать специалиста', onTap: () {}),
-                  ],
-                )
-              ],
-            ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: true
+            ? BlocBuilder<LocalEmployeesBloc, LocalEmployeesState>(
+                builder: (context, state) {
+                  return Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: constraints.maxWidth / 2,
+                      child: EmployeeSelectionContent(
+                        employees: (state is LocalEmployeesLoaded)
+                            ? state.employees
+                            : [],
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Column(
+                children: [
+                  const Text('Новая запись'),
+                  Wrap(
+                    children: [
+                      AppoTypeWidget(
+                          text: 'Выбрать услуги',
+                          onTap: () {
+                            // context.pu
+                          }),
+                      AppoTypeWidget(text: 'Выбрать специалиста', onTap: () {}),
+                    ],
+                  )
+                ],
+              ),
+      );
+    });
   }
 }
