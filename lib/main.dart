@@ -4,11 +4,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
-import 'package:telegram_web_app/telegram_web_app.dart';
+
+// import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+// import 'package:intl/date_symbol_data_local.dart';
+// import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:vteme_tg_miniapp/core/repository/local_appointments_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/local_regulations_repository.dart';
@@ -43,7 +44,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await initializeDateFormatting('ru', null);
+  // await initializeDateFormatting('ru', null);
 
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -98,15 +99,15 @@ void main() async {
       ),
     ],
     child: MaterialApp.router(
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', 'US'), // English
-        Locale('ru', 'RU'), // Russian
-      ],
+      // localizationsDelegates: const [
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      //   GlobalCupertinoLocalizations.delegate,
+      // ],
+      // supportedLocales: const [
+      //   Locale('en', 'US'), // English
+      //   Locale('ru', 'RU'), // Russian
+      // ],
       theme: getTheme(0xFF607D8B),
       routerConfig: router,
       // home: const App(),
