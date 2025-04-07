@@ -16,6 +16,10 @@ class ScheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double activeWidth = MediaQuery.of(context).size.width <= 800
+        ? MediaQuery.of(context).size.width
+        : 800;
+
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         body: true
@@ -24,7 +28,9 @@ class ScheduleScreen extends StatelessWidget {
                   return Align(
                     alignment: Alignment.center,
                     child: SizedBox(
-                      width: constraints.maxWidth / 2,
+                      width: activeWidth < 800
+                          ? constraints.maxWidth
+                          : constraints.maxWidth / 2,
                       child: EmployeeSelectionContent(
                         employees: (state is LocalEmployeesLoaded)
                             ? state.employees

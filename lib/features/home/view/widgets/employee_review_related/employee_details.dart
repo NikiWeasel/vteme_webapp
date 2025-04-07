@@ -33,7 +33,7 @@ class EmployeeDetails extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
               color: Theme.of(context).colorScheme.secondaryContainer),
           width: width,
-          height: height * 2,
+          // height: height * 2,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
@@ -43,19 +43,16 @@ class EmployeeDetails extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RectangleProfileHeader(
-                        employee: employee,
-                      ),
+                    child: RectangleProfileHeader(
+                      employee: employee,
                     ),
                   ),
                   const SizedBox(
                     height: 16,
                   ),
-                  Expanded(
-                    child: SizedBox(
-                      width: double.infinity,
+                  if (employee.description != '')
+                    SizedBox(
+                      height: 250,
                       child: Card(
                         child: SingleChildScrollView(
                           child: Padding(
@@ -82,15 +79,10 @@ class EmployeeDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: height, maxWidth: double.infinity),
-                        child:
-                            PhotoSlider(photoUrls: photoUrls, height: height)),
-                  ),
+                  ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxHeight: height, maxWidth: double.infinity),
+                      child: PhotoSlider(photoUrls: photoUrls, height: height)),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: ElevatedButton(

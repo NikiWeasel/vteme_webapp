@@ -58,13 +58,13 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
         : 800;
     var widgetHeight = 83.0 * widget.emps.length;
 
-    var height = 0.0;
-    if (activeWidth < 800) {
-      height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8 + 100;
-    } else {
-      height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
-    }
-    // height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
+    var height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
+    // if (activeWidth < 800) {
+    //   height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8 + 100;
+    // } else {
+    //   height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
+    // }
+    // // height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -81,6 +81,10 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
                 widget.portfolioUrls[activeEmployeeDetails.employeeId] ?? [],
           ),
         ),
+        if (activeWidth < 800)
+          const SizedBox(
+            width: 4,
+          ),
         SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

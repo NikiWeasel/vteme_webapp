@@ -73,37 +73,37 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 45,
-            child: TextField(
-              controller: controller,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                  hintText: 'Поиск по имени, типам услуг',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                  suffix: isTextFieldEmpty
-                      ? null
-                      : IconButton(
-                          onPressed: deleteString,
-                          icon: const Icon(Icons.close),
-                        )),
-              onChanged: onChanged,
-            ),
+          child: TextField(
+            controller: controller,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+                hintText: 'Поиск по имени, типам услуг',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: isTextFieldEmpty
+                    ? null
+                    : IconButton(
+                        onPressed: deleteString,
+                        icon: const Icon(Icons.close),
+                      )),
+            onChanged: onChanged,
           ),
         ),
         SingleChildScrollView(
-          child: Column(
-            children: [
-              for (var e in filteredEmployees)
-                EmployeeTile(
-                    employee: e,
-                    onTap: () {
-                      //TODO СДЕЛАТЬ
-                    })
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                for (var e in filteredEmployees)
+                  EmployeeTile(
+                      employee: e,
+                      onTap: () {
+                        //TODO СДЕЛАТЬ
+                      })
+              ],
+            ),
           ),
         )
       ],
