@@ -1,0 +1,26 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:vteme_tg_miniapp/core/models/employee.dart';
+
+class EmployeeTile extends StatelessWidget {
+  const EmployeeTile({super.key, required this.employee, required this.onTap});
+
+  final Employee employee;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: ListTile(
+        leading: CircleAvatar(
+            foregroundImage: NetworkImage(employee.imageUrl),
+            child: const Icon(Icons.person)),
+        title: Text(employee.name),
+        subtitle: Text(employee.categoryIds.join(', ')),
+        onTap: onTap,
+      ),
+    );
+  }
+}

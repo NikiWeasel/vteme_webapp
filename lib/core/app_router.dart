@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
+import 'package:vteme_tg_miniapp/features/schedule_appo/view/schedule_screen.dart';
 
 get router {
   return GoRouter(
@@ -26,6 +27,16 @@ get router {
         path: '/home',
         builder: (context, state) {
           return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: '/schedule_appo',
+        builder: (context, state) {
+          final data = state.extra as Map<String, dynamic>?;
+          return ScheduleScreen(
+            employee: data?['employee'],
+            service: data?['service'],
+          );
         },
       ),
       // GoRoute(

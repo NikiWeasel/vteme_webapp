@@ -105,7 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'Наши специалисты',
-                                style: Theme.of(context)
+                                style: Theme
+                                    .of(context)
                                     .textTheme
                                     .titleLarge!
                                     .copyWith(fontWeight: FontWeight.bold),
@@ -120,25 +121,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       TextSpan(
                                         text: 'Услуги ',
-                                        style: Theme.of(context)
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .titleLarge!
                                             .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       TextSpan(
                                         text: '${regs.length}',
-                                        style: Theme.of(context)
+                                        style: Theme
+                                            .of(context)
                                             .textTheme
                                             .titleLarge!
                                             .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .color
-                                                  ?.withOpacity(0.5),
-                                            ),
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .color
+                                              ?.withOpacity(0.5),
+                                        ),
                                       )
                                     ],
                                   ),
@@ -147,14 +151,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxWidth:
-                                        MediaQuery.of(context).size.width / 2,
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 2,
                                   ),
-                                  child: RegulationTile(regulation: r)),
+                                  child: RegulationTile(
+                                    regulation: r, onPressed: () {
+                                    context.push('/schedule_appo', extra: {
+                                      'service': r
+                                    });
+                                  },)),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'Где нас найти',
-                                style: Theme.of(context)
+                                style: Theme
+                                    .of(context)
                                     .textTheme
                                     .titleLarge!
                                     .copyWith(fontWeight: FontWeight.bold),

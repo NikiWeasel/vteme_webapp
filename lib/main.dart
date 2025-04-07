@@ -53,21 +53,20 @@ void main() async {
   //         firebaseAuth: firebaseAuth, firebaseStorage: firebaseStorage);
 
   final LocalEmployeesRepository localEmployeesRepository =
-  LocalEmployeesRepository(
+      LocalEmployeesRepository(
     firebaseFirestore: firebaseFirestore,
   );
 
   final LocalPortfolioPhotosRepository fetchDataRepository =
-  LocalPortfolioPhotosRepository(
-      firebaseStorage: firebaseStorage);
+      LocalPortfolioPhotosRepository(firebaseStorage: firebaseStorage);
 
   final LocalAppointmentsRepository localAppointmentsRepository =
-  LocalAppointmentsRepository(
-      firebaseFirestore: firebaseFirestore,
-      firebaseStorage: firebaseStorage);
+      LocalAppointmentsRepository(
+          firebaseFirestore: firebaseFirestore,
+          firebaseStorage: firebaseStorage);
 
   final LocalRegulationsRepository localRegulationsRepository =
-  LocalRegulationsRepository(
+      LocalRegulationsRepository(
     firebaseFirestore: firebaseFirestore,
   );
 
@@ -78,23 +77,19 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<LocalEmployeesBloc>(
-        create: (context) =>
-        LocalEmployeesBloc(localEmployeesRepository)
+        create: (context) => LocalEmployeesBloc(localEmployeesRepository)
           ..add(FetchAllEmployeesData()),
       ),
       BlocProvider<LocalAppointmentsBloc>(
-        create: (context) =>
-        LocalAppointmentsBloc(localAppointmentsRepository)
+        create: (context) => LocalAppointmentsBloc(localAppointmentsRepository)
           ..add(FetchAppointmentsData()),
       ),
       BlocProvider<LocalRegulationsBloc>(
-        create: (context) =>
-        LocalRegulationsBloc(localRegulationsRepository)
+        create: (context) => LocalRegulationsBloc(localRegulationsRepository)
           ..add(FetchRegulationsData()),
       ),
       BlocProvider<LocalPortfolioPhotosBloc>(
-        create: (context) =>
-        LocalPortfolioPhotosBloc(fetchDataRepository)
+        create: (context) => LocalPortfolioPhotosBloc(fetchDataRepository)
           ..add(FetchPortfolioPhotosData()),
       ),
       BlocProvider<ActionsAppointmentBloc>(
@@ -112,7 +107,7 @@ void main() async {
         Locale('en', 'US'), // English
         Locale('ru', 'RU'), // Russian
       ],
-      theme: getTheme(0xFF9A00A5),
+      theme: getTheme(0xFF607D8B),
       routerConfig: router,
       // home: const App(),
     ),

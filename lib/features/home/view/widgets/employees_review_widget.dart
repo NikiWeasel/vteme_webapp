@@ -35,7 +35,8 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
             description: 'description',
             email: 'email',
             number: 'number',
-            imageUrl: 'imageUrl');
+            imageUrl: 'imageUrl',
+            categoryIds: []);
     super.initState();
   }
 

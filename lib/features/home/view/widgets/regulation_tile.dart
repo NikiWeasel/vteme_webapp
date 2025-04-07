@@ -7,11 +7,11 @@ class RegulationTile extends StatelessWidget {
   const RegulationTile(
       {super.key,
       // required this.onDelete,
-      required this.regulation});
+      required this.regulation,
+      required this.onPressed});
 
   final Regulation regulation;
-
-  // final void Function() onDelete;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,8 @@ class RegulationTile extends StatelessWidget {
             const SizedBox(
               width: 24,
             ),
-            ElevatedButton(onPressed: () {}, child: const Text('Записаться')),
+            ElevatedButton(
+                onPressed: onPressed, child: const Text('Записаться')),
           ],
         ),
       ),
