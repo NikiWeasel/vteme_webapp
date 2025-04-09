@@ -1,8 +1,13 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
 
 // import 'package:telegram_web_app/telegram_web_app.dart';
@@ -38,9 +43,34 @@ import 'package:vteme_tg_miniapp/firebase_options.dart';
 //   main();
 //   return;
 // }
+// void _removeTelegramParamsFromUrl() {
+//   if (kIsWeb) {
+//     final uri = Uri.parse(window.location.href);
+//     if (uri.query.contains('tgWebAppData')) {
+//       // Удаляем параметры из URL без перезагрузки страницы
+//       window.history.replaceState(null, '', uri.path);
+//     }
+//   }
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    if (TelegramWebApp.instance.isSupported) {
+      TelegramWebApp.instance.ready();
+      Future.delayed(
+          const Duration(seconds: 1), TelegramWebApp.instance.expand);
+    }
+  } catch (e) {
+    print("Error happened in Flutter while loading Telegram $e");
+    // add delay for 'Telegram seldom not loading' bug
+    // await Future.delayed(const Duration(milliseconds: 200));
+    // main();
+    // return;
+  }
+  // if (GoRouter.of(context).location.)
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
