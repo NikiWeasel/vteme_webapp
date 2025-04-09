@@ -68,26 +68,32 @@ class _PhotoSliderState extends State<PhotoSlider> {
                                   if (loadingProgress == null) {
                                     return child; // Когда изображение загружено, оно отображается.
                                   }
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primaryContainer
-                                            .withOpacity(0.5),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(0.5))),
-                                    height: MediaQuery.of(context).size.height,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                (loadingProgress
-                                                        .expectedTotalBytes ??
-                                                    1)
-                                            : null, // Прогресс загрузки, если известен размер.
+                                  return InteractiveViewer(
+                                    boundaryMargin: const EdgeInsets.all(20.0),
+                                    minScale: 0.1,
+                                    maxScale: 1.6,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primaryContainer
+                                              .withOpacity(0.5),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(0.5))),
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null, // Прогресс загрузки, если известен размер.
+                                        ),
                                       ),
                                     ),
                                   );

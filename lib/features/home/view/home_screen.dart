@@ -216,6 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         context.push('/schedule_appo',
                                             extra: {'service': r});
                                       },
+                                      isSecondaryScreen: false,
                                     ),
                                   )),
                           ]),

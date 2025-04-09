@@ -11,3 +11,9 @@ ThemeData getTheme(int seedColor) {
     textTheme: GoogleFonts.montserratTextTheme(),
   );
 }
+
+final smallButton = ButtonStyle(
+  minimumSize: WidgetStateProperty.all(const Size(35, 35)),
+  padding: WidgetStateProperty.all(
+      const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0)),
+);

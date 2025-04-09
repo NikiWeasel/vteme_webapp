@@ -31,27 +31,7 @@ import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_b
 import 'package:vteme_tg_miniapp/core/theme.dart';
 import 'package:vteme_tg_miniapp/firebase_options.dart';
 
-// try {
-//   if (TelegramWebApp.instance.isSupported) {
-//     TelegramWebApp.instance.ready();
-//     Future.delayed(const Duration(seconds: 1), TelegramWebApp.instance.expand);
-//   }
-// } catch (e) {
-//   print("Error happened in Flutter while loading Telegram $e");
-//   // add delay for 'Telegram not loading sometimes' bug
-//   await Future.delayed(const Duration(milliseconds: 200));
-//   main();
-//   return;
-// }
-// void _removeTelegramParamsFromUrl() {
-//   if (kIsWeb) {
-//     final uri = Uri.parse(window.location.href);
-//     if (uri.query.contains('tgWebAppData')) {
-//       // Удаляем параметры из URL без перезагрузки страницы
-//       window.history.replaceState(null, '', uri.path);
-//     }
-//   }
-// }
+bool tgSupported = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,17 +39,17 @@ void main() async {
   try {
     if (TelegramWebApp.instance.isSupported) {
       TelegramWebApp.instance.ready();
+      tgSupported = true;
       Future.delayed(
           const Duration(seconds: 1), TelegramWebApp.instance.expand);
     }
   } catch (e) {
     print("Error happened in Flutter while loading Telegram $e");
     // add delay for 'Telegram seldom not loading' bug
-    // await Future.delayed(const Duration(milliseconds: 200));
-    // main();
-    // return;
+    await Future.delayed(const Duration(milliseconds: 200));
+    main();
+    return;
   }
-  // if (GoRouter.of(context).location.)
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -138,7 +118,9 @@ void main() async {
       //   Locale('en', 'US'), // English
       //   Locale('ru', 'RU'), // Russian
       // ],
-      theme: getTheme(0xFF607D8B),
+      theme: tgSupported
+          ? TelegramThemeUtil.getTheme(TelegramWebApp.instance)
+          : getTheme(0xFF607D8B),
       routerConfig: router,
       // home: const App(),
     ),

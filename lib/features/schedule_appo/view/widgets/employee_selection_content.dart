@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:telegram_web_app/telegram_web_app.dart' as tg;
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
+import 'package:vteme_tg_miniapp/core/theme.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_tile.dart';
+import 'package:vteme_tg_miniapp/main.dart';
 
 class EmployeeSelectionContent extends StatefulWidget {
   const EmployeeSelectionContent({super.key, required this.employees});
@@ -72,25 +76,24 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: controller,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-                hintText: 'Поиск по имени, типам услуг',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: isTextFieldEmpty
-                    ? null
-                    : IconButton(
-                        onPressed: deleteString,
-                        icon: const Icon(Icons.close),
-                      )),
-            onChanged: onChanged,
-          ),
-        ),
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: controller,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                  hintText: 'Поиск по имени, типам услуг',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: isTextFieldEmpty
+                      ? null
+                      : IconButton(
+                          onPressed: deleteString,
+                          icon: const Icon(Icons.close),
+                        )),
+              onChanged: onChanged,
+            )),
         SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
