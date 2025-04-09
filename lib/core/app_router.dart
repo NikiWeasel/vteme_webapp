@@ -66,11 +66,16 @@ get router {
         // BottomNavigationBar
       ],
       redirect: (context, state) {
-        if (state.path != null && state.path!.contains('tgWebAppData')) {
-          print('gol');
+        final uri = state.uri;
+
+        print('state.path: ${state.path}'); // теперь НЕ null
+        print('state.location: ${state.uri.toString()}');
+        print('state.uri: ${state.uri}');
+
+        if (uri.toString().contains('tgWebAppData')) {
           return '/home';
         }
-        print('gol1');
+
         return null;
       });
 }
