@@ -14,6 +14,16 @@ class EmployeeTile extends StatelessWidget {
     return Card(
       color: Theme.of(context).colorScheme.secondaryContainer,
       child: ListTile(
+        tileColor: Theme.of(context).colorScheme.secondaryContainer,
+        shape: ShapeBorder.lerp(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          1,
+        ),
         leading: CircleAvatar(
             foregroundImage: NetworkImage(employee.imageUrl),
             child: const Icon(Icons.person)),

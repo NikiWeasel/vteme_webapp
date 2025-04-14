@@ -8,9 +8,11 @@ import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_ti
 import 'package:vteme_tg_miniapp/main.dart';
 
 class EmployeeSelectionContent extends StatefulWidget {
-  const EmployeeSelectionContent({super.key, required this.employees});
+  const EmployeeSelectionContent(
+      {super.key, required this.employees, required this.onSelected});
 
   final List<Employee> employees;
+  final void Function(Employee) onSelected;
 
   @override
   State<EmployeeSelectionContent> createState() =>
@@ -76,24 +78,36 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: controller,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                  hintText: 'Поиск по имени, типам услуг',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: isTextFieldEmpty
-                      ? null
-                      : IconButton(
-                          onPressed: deleteString,
-                          icon: const Icon(Icons.close),
-                        )),
-              onChanged: onChanged,
-            )),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16))),
+            child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 8.0,
+                ),
+                child: TextField(
+                  controller: controller,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                      hintText: 'Поиск по имени, типам услуг',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: isTextFieldEmpty
+                          ? null
+                          : IconButton(
+                              onPressed: deleteString,
+                              icon: const Icon(Icons.close),
+                            )),
+                  onChanged: onChanged,
+                )),
+          ),
+        ),
         SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -103,7 +117,7 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
                   EmployeeTile(
                       employee: e,
                       onTap: () {
-                        //TODO СДЕЛАТЬ
+                        widget.onSelected(e);
                       })
               ],
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/photo_slider.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/rectangle_profile_header.dart';
@@ -21,6 +22,10 @@ class EmployeeDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var descriptionWidth = width * 2 / 3 - 32;
+
+    void onTap(Employee e) {
+      context.go('/schedule_appo', extra: {'employee': e});
+    }
 
     return LayoutBuilder(builder: (context, constrains) {
       double activeWidth = MediaQuery.of(context).size.width <= 800
@@ -86,7 +91,10 @@ class EmployeeDetails extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: ElevatedButton(
-                        onPressed: () {}, child: const Text('Записаться')),
+                        onPressed: () {
+                          onTap(employee);
+                        },
+                        child: const Text('Записаться')),
                   )
                 ],
               ),
@@ -156,7 +164,10 @@ class EmployeeDetails extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: ElevatedButton(
-                            onPressed: () {}, child: const Text('Записаться')),
+                            onPressed: () {
+                              onTap(employee);
+                            },
+                            child: const Text('Записаться')),
                       )
                     ],
                   ),
