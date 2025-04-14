@@ -25,7 +25,7 @@ import 'package:vteme_tg_miniapp/core/repository/actions_appointment_repository.
 import 'package:vteme_tg_miniapp/core/app_router.dart';
 import 'package:vteme_tg_miniapp/core/bloc/actions_appointments/actions_appointment_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
-import 'package:vteme_tg_miniapp/core/bloc/fetch_emloyees/local_employees_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/theme.dart';

@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 
 // import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vteme_tg_miniapp/core/bloc/fetch_emloyees/local_employees_bloc.dart';
-import 'package:vteme_tg_miniapp/core/bloc/fetch_emloyees/local_employees_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
@@ -27,26 +27,26 @@ class _HomeScreenState extends State<HomeScreen> {
   // final TelegramWebApp telegram = TelegramWebApp.instance;
   // TelegramUser? telegramUser;
 
-  @override
-  void initState() {
-    super.initState();
-    // telegramUser = telegram.initData.user;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // telegramUser = telegram.initData.user;
+  //
+  //   // FlutterError.onError = (details) {
+  //   //   showSnackBar("Flutter error: $details");
+  //   //   print("Flutter error happened: $details");
+  //   // };
+  //
+  //   // TelegramWebApp.instance.ready();
+  //
+  //   // check();
+  // }
 
-    // FlutterError.onError = (details) {
-    //   showSnackBar("Flutter error: $details");
-    //   print("Flutter error happened: $details");
-    // };
-
-    // TelegramWebApp.instance.ready();
-
-    check();
-  }
-
-  void check() async {
-    await Future.delayed(const Duration(seconds: 2));
-    // isDefinedVersion = telegram.isVersionAtLeast('Bot API 6.1');
-    setState(() {});
-  }
+  // void check() async {
+  //   await Future.delayed(const Duration(seconds: 2));
+  //   // isDefinedVersion = telegram.isVersionAtLeast('Bot API 6.1');
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: RegulationTile(
                                       regulation: r,
                                       onPressed: () {
-                                        context.push('/schedule_appo',
+                                        context.go('/schedule_appo',
                                             extra: {'service': r});
                                       },
                                       isSecondaryScreen: false,
