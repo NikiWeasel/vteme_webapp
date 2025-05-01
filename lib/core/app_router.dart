@@ -29,6 +29,7 @@ get router {
             return const HomeScreen();
           },
         ),
+        //TODO: Лучше передавать параметры в формате JSON строки url-safe Base64, а не как extra
         GoRoute(
           path: '/schedule_appo',
           builder: (context, state) {

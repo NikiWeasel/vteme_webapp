@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram_web_app/telegram_web_app.dart' as tg;
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
-import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/appo_type_widget.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
@@ -100,24 +99,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           return BlocBuilder<LocalEmployeesBloc, LocalEmployeesState>(
             builder: (context, empState) {
               return Scaffold(
-                bottomNavigationBar: Container(
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        //TODO: Скрывать при отсутствии выбора, выводить стату
-                        Column(),
-                        const Spacer(),
-                        ElevatedButton(
-                            onPressed: () {}, child: const Text('Продолжить'))
-                      ],
-                    ),
-                  ),
-                ),
                 appBar: title != null
                     ? AppBar(
                         title: Text(title!),
@@ -169,6 +150,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     );
                   }
 
+                  //TODO: Сделать бы нормальный CircularProgressIndicator, если не Loaded
                   if (selectedEmployee != null && selectedRegs == null) {
                     return RegSelectionContent(
                       regs: (regState is LocalRegulationsLoadedState)

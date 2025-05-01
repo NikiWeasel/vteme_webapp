@@ -109,6 +109,7 @@ void main() async {
       ),
     ],
     child: MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       // localizationsDelegates: const [
       //   GlobalMaterialLocalizations.delegate,
       //   GlobalWidgetsLocalizations.delegate,
