@@ -119,6 +119,8 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
         ? MediaQuery.of(context).size.width
         : 800;
 
+    //TODO сделать выбор не более 5 услуг
+
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         bottomNavigationBar: selectedRegs.isNotEmpty

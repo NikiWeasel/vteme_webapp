@@ -79,4 +79,17 @@ class Appointment {
     }
     return formattedDuration;
   }
+
+  @override
+  String toString() {
+    return 'Appointment('
+        'appointmentId: $appointmentId, '
+        'masterId: $masterId, '
+        'clientName: $clientName, '
+        'clientNumber: $clientNumber, '
+        'serviceName: $serviceName, '
+        'duration: $duration, '
+        'date: $date'
+        ')';
+  }
 }

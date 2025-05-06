@@ -13,8 +13,8 @@ import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
 // import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// import 'package:intl/date_symbol_data_local.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:vteme_tg_miniapp/core/repository/local_appointments_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/local_regulations_repository.dart';
@@ -30,6 +30,16 @@ import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfoli
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/theme.dart';
 import 'package:vteme_tg_miniapp/firebase_options.dart';
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+      };
+}
 
 bool tgSupported = false;
 
@@ -54,7 +64,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await initializeDateFormatting('ru', null);
+  await initializeDateFormatting('ru', null);
 
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -110,6 +120,8 @@ void main() async {
     ],
     child: MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      scrollBehavior: MyCustomScrollBehavior(),
+
       // localizationsDelegates: const [
       //   GlobalMaterialLocalizations.delegate,
       //   GlobalWidgetsLocalizations.delegate,
