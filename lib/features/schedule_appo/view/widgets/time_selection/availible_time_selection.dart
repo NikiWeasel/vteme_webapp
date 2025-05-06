@@ -2,65 +2,51 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
+import 'package:vteme_tg_miniapp/core/models/combined_regulation_with_time_options.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
+import 'package:vteme_tg_miniapp/core/models/regulation_with_time_options.dart';
 import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection/date_button.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection/time_button.dart';
 
 class AvailableTimeSelection extends StatefulWidget {
-  const AvailableTimeSelection(
-      {super.key,
-      required this.freeSlots,
-      required this.dateBoolList,
-      required this.selectSlot,
-      required this.resetDateBoolList,
-      required this.regIndex,
-      required this.selectSlotDifferentTime});
+  const AvailableTimeSelection({
+    super.key,
+    required this.regulationWithTimeOptions,
+    required this.combinedRegulationsWithTimeOptions,
+    required this.addWeek,
+  });
 
-  final List<List<DateTime>> freeSlots;
-  final List<List<bool>> dateBoolList;
-  final void Function(int, int)? selectSlot;
-  final void Function(int, int, int)? selectSlotDifferentTime;
-
-  final void Function() resetDateBoolList;
-  final int regIndex;
+  final CombinedRegulationsWithTimeOptions combinedRegulationsWithTimeOptions;
+  final List<RegulationWithTimeOptions> regulationWithTimeOptions;
+  final void Function() addWeek;
 
   @override
   State<AvailableTimeSelection> createState() => _AvailableTimeSelectionState();
 }
 
 class _AvailableTimeSelectionState extends State<AvailableTimeSelection> {
-  late List<bool> boolList;
-
-  int trueIndex = 0;
+  late int selectedDateIndex;
 
   @override
   void initState() {
-    boolList = List.generate(
-      7,
-      (index) {
-        if (index == 0) return true;
-        return false;
-      },
-    );
+    selectedDateIndex = 0;
     super.initState();
   }
 
-  void selectDate(int i) {
-    // widget.resetDateBoolList();
-    boolList = List.generate(
-      7,
-      (index) => false,
-    );
+  void selectDate(int index) {
     setState(() {
-      boolList[i] = true;
-      trueIndex = i;
+      selectedDateIndex = index;
     });
-    print(trueIndex);
   }
 
   @override
   Widget build(BuildContext context) {
+    final dates = widget.combinedRegulationsWithTimeOptions.dates;
+    final selectedDate = dates[selectedDateIndex];
+    final timeOptions =
+        widget.combinedRegulationsWithTimeOptions.timeSlotsByDate;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -69,59 +55,50 @@ class _AvailableTimeSelectionState extends State<AvailableTimeSelection> {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                for (int i = 0; i < widget.freeSlots.length; i++) ...[
-                  DateButton(
-                    dateTime: widget.freeSlots[i][0],
-                    isSelected: boolList[i],
-                    index: i,
-                    onSelected: selectDate,
+                for (int i = 0; i < dates.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: DateButton(
+                      dateTime: dates[i],
+                      isSelected: selectedDateIndex == i,
+                      index: i,
+                      onSelected: selectDate,
+                    ),
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                ],
+                IconButton(
+                  onPressed: widget.addWeek,
+                  icon: const Icon(Icons.add),
+                ),
               ],
             ),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(9),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (int i = 0;
-                    i < widget.freeSlots[trueIndex].length;
-                    i++) ...[
-                  TimeButton(
-                    dateTime: widget.freeSlots[trueIndex][i],
-                    isSelected: widget.dateBoolList[trueIndex][i],
-                    onSelected: () {
-                      if (widget.selectSlot == null) {
-                        widget.selectSlotDifferentTime!(
-                            trueIndex, i, widget.regIndex);
-                      } else {
-                        widget.selectSlot!(
-                          trueIndex,
-                          i,
-                        );
-                      }
-                    },
+                for (int i = 0; i < timeOptions[selectedDateIndex].length; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: TimeButton(
+                      dateTime: timeOptions[selectedDateIndex][i].time,
+                      isSelected: timeOptions[selectedDateIndex][i].isSelected,
+                      onSelected: () {
+                        setState(() {
+                          widget.combinedRegulationsWithTimeOptions
+                              .selectSlot(selectedDateIndex, i);
+                        });
+                      },
+                    ),
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                ]
               ],
             ),
           ),
-        )
-        // Text(''),
+        ),
       ],
     );
   }

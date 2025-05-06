@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 
@@ -62,4 +63,11 @@ List<DateTime> getAvailableTimeSlots({
   // print(DateTime.now().toString());
   // print(freeSlots);
   return freeSlots;
+}
+
+void showSnackBar({required BuildContext context, required String text}) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Center(
+    child: Text(text),
+  )));
 }
