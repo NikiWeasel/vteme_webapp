@@ -1,4 +1,5 @@
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
+import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/models/time_slot_option.dart';
 import 'package:vteme_tg_miniapp/core/utils/functions.dart';

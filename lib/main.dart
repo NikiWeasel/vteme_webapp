@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
+import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
 import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
 
 // import 'package:telegram_web_app/telegram_web_app.dart';
@@ -40,6 +41,9 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
         PointerDeviceKind.unknown,
       };
 }
+
+ValueNotifier<SelectedRegulationOption?> selectedRegulationWithTimeOptions =
+    ValueNotifier<SelectedRegulationOption?>(null);
 
 bool tgSupported = false;
 

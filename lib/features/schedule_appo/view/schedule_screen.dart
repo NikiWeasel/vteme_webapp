@@ -7,6 +7,7 @@ import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments
 import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
+import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/appo_type_widget.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
@@ -29,6 +30,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   Employee? selectedEmployee;
   List<Regulation>? selectedRegs;
+  SelectedRegulationOption? selectedRegsWithOption;
 
   String? title;
 
@@ -68,6 +70,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   void selectRegs(List<Regulation> regs) {
     setState(() {
       selectedRegs = regs;
+    });
+  }
+
+  void selectRegsWithTime(SelectedRegulationOption selectedRegulationOption) {
+    setState(() {
+      selectedRegsWithOption = selectedRegulationOption;
     });
   }
 
@@ -169,13 +177,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         );
                       }
 
-                      if (selectedRegs != null && selectedEmployee != null) {
+                      if (selectedRegs != null &&
+                          selectedEmployee != null &&
+                          selectedRegsWithOption == null) {
                         return TimeSelectionContent(
                           regs: selectedRegs!,
                           appos: (appoState is LocalAppointmentsLoaded)
                               ? appoState.appointments
                               : [],
                           emp: selectedEmployee!,
+                          selectRegsWithTime: selectRegsWithTime,
                         );
                       }
 

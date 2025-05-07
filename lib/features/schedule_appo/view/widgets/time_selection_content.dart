@@ -5,10 +5,12 @@ import 'package:vteme_tg_miniapp/core/models/combined_regulation_with_time_optio
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation_with_time_options.dart';
+import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
 import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection/availible_time_selection.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection/employee_reg_widget.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection/separation_widget.dart';
+import 'package:vteme_tg_miniapp/main.dart';
 
 const List<Widget> shedMode = <Widget>[
   Padding(
@@ -27,11 +29,14 @@ class TimeSelectionContent extends StatefulWidget {
     required this.regs,
     required this.appos,
     required this.emp,
+    required this.selectRegsWithTime,
   });
 
   final List<Regulation> regs;
   final List<Appointment> appos;
   final Employee emp;
+
+  final void Function(SelectedRegulationOption) selectRegsWithTime;
 
   @override
   State<TimeSelectionContent> createState() => _TimeSelectionContentState();
@@ -42,6 +47,12 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
   late List<DateTime> datesList;
   late CombinedRegulationsWithTimeOptions combinedBlock;
   List<RegulationWithTimeOptions> separateBlocks = [];
+
+  int finalCost = 0;
+
+  int finalDuration = 0;
+
+  SelectedRegulationOption? selectedRegulationOption;
 
   @override
   void initState() {
@@ -62,6 +73,107 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
               allAppointments: widget.appos,
             ))
         .toList();
+    countFinalVars();
+
+    selectedRegulationWithTimeOptions.addListener(_onTimeChanged);
+  }
+
+  void _onTimeChanged() {
+    if (selectedRegulationWithTimeOptions.value == null) return;
+
+    // if (selectedRegulationWithTimeOptions.value is RegulationWithTimeOptions) {}
+    // if (selectedRegulationWithTimeOptions.value
+    //     is CombinedRegulationsWithTimeOptions) {}
+    selectedRegulationOption = selectedRegulationWithTimeOptions.value;
+
+    // print('NOTIFIER');
+  }
+
+  void onContinueButton() {
+    if (selectedRegulationOption == null ||
+        !isTimeSelected(selectedRegulationOption!)) {
+      showSnackBar(context: context, text: 'Не выбрано время');
+      return;
+    }
+    widget.selectRegsWithTime(selectedRegulationOption!);
+
+    selectedRegulationWithTimeOptions.value = null;
+  }
+
+  bool isTimeSelected(SelectedRegulationOption selectedRegulationOption) {
+    if (selectedRegulationOption is SelectedCombined) {
+      var timeSlotsByDate = selectedRegulationOption.combined.timeSlotsByDate;
+      int datesSelected = 0;
+      for (var t in timeSlotsByDate) {
+        // t.contains(element)
+        if (t.any(
+          (element) => element.isSelected,
+        )) {
+          datesSelected++;
+        }
+      }
+      return (timeSlotsByDate.length == datesSelected);
+    }
+    if (selectedRegulationOption is SelectedSeparated) {
+      final separatedRegsList = selectedRegulationOption.separated;
+
+      int selectedCount = 0;
+
+      print(separatedRegsList);
+
+      for (var e in separatedRegsList) {
+        final hasSelection = e.timeSlotsByDate.any(
+          (slotList) => slotList.any((slot) => slot.isSelected),
+        );
+        // print(e
+        //     .where(
+        //       (element) => element.isSelected,
+        // )
+        //     .toList());
+        if (hasSelection) {
+          selectedCount++;
+        }
+      }
+      return selectedCount == separatedRegsList.length;
+    }
+
+    return false;
+  }
+
+  void selectSeparatedTime(
+      int index, RegulationWithTimeOptions regulationWithTimeOptions) {
+    var value = selectedRegulationWithTimeOptions.value;
+    if (value == null) {
+      selectedRegulationWithTimeOptions.value = SelectedSeparated([]);
+      value = selectedRegulationWithTimeOptions.value;
+    }
+    if (value is SelectedSeparated) {
+      while (value.separated.length < widget.regs.length) {
+        value.separated.add(
+          RegulationWithTimeOptions(
+            regulation: widget.regs[0],
+            // или другой способ
+            dates: [],
+            allAppointments: [],
+          ),
+        );
+      }
+
+      value.separated[index] = regulationWithTimeOptions;
+      print('select time');
+    }
+  }
+
+  void countFinalVars() {
+    finalDuration = 0;
+    finalCost = 0;
+
+    for (var e in widget.regs) {
+      setState(() {
+        finalCost += e.cost;
+        finalDuration += e.duration;
+      });
+    }
   }
 
   void addWeek() {
@@ -97,82 +209,119 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
         : 800;
 
     return LayoutBuilder(builder: (context, constraints) {
-      return Align(
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: activeWidth < 800
-              ? constraints.maxWidth
-              : constraints.maxWidth / 2,
-          child: Column(
-            children: [
-              if (widget.regs.length > 1)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ToggleButtons(
-                    direction: Axis.horizontal,
-                    onPressed: (int index) {
-                      setState(() {
-                        for (int i = 0;
-                            i < _selectedTimeSelectionMode.length;
-                            i++) {
-                          _selectedTimeSelectionMode[i] = i == index;
-                        }
-                      });
-                    },
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    constraints:
-                        const BoxConstraints(minHeight: 40.0, minWidth: 80.0),
-                    isSelected: _selectedTimeSelectionMode,
-                    children: shedMode,
-                  ),
-                ),
-              if (_selectedTimeSelectionMode[0]) // Объединенное расписание
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        for (var reg in widget.regs) ...[
-                          EmployeeRegWidget(emp: widget.emp, reg: reg),
-                          const SeparationWidget(),
-                        ],
-                        const SizedBox(height: 8),
-                        AvailableTimeSelection(
-                          combinedRegulationsWithTimeOptions: combinedBlock,
-                          regulationWithTimeOptions: separateBlocks,
-                          addWeek: addWeek,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                )
-              else // Раздельное расписание
+      return Scaffold(
+        bottomNavigationBar: Container(
+          // height: 45,
+          width: double.infinity,
+          decoration:
+              BoxDecoration(color: Theme.of(context).colorScheme.secondary),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (int i = 0; i < separateBlocks.length; i++)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              EmployeeRegWidget(
-                                  emp: widget.emp,
-                                  reg: separateBlocks[i].regulation),
-                              const SeparationWidget(),
-                              AvailableTimeSelection(
-                                combinedRegulationsWithTimeOptions:
-                                    combinedBlock,
-                                regulationWithTimeOptions: separateBlocks,
-                                addWeek: addWeek,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                    Text(
+                      '$finalCost руб',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.surface),
+                    ),
+                    Text(
+                      '${widget.regs.length} услуг | $finalDuration минут',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.surface),
+                    ),
                   ],
                 ),
-            ],
+                const Spacer(),
+                ElevatedButton(
+                    onPressed: onContinueButton,
+                    child: const Text('Продолжить'))
+              ],
+            ),
+          ),
+        ),
+        body: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: activeWidth < 800
+                ? constraints.maxWidth
+                : constraints.maxWidth / 2,
+            child: Column(
+              children: [
+                if (widget.regs.length > 1)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ToggleButtons(
+                      direction: Axis.horizontal,
+                      onPressed: (int index) {
+                        setState(() {
+                          for (int i = 0;
+                              i < _selectedTimeSelectionMode.length;
+                              i++) {
+                            _selectedTimeSelectionMode[i] = i == index;
+                          }
+                        });
+                      },
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      constraints:
+                          const BoxConstraints(minHeight: 40.0, minWidth: 80.0),
+                      isSelected: _selectedTimeSelectionMode,
+                      children: shedMode,
+                    ),
+                  ),
+                if (_selectedTimeSelectionMode[0]) // Объединенное расписание
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          for (var reg in widget.regs) ...[
+                            EmployeeRegWidget(emp: widget.emp, reg: reg),
+                            const SeparationWidget(),
+                          ],
+                          const SizedBox(height: 8),
+                          AvailableTimeSelection(
+                            combinedRegulationsWithTimeOptions: combinedBlock,
+                            regulationWithTimeOptions: null,
+                            addWeek: addWeek,
+                            selectSeparatedTime: null,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
+                  )
+                else // Раздельное расписание
+                  Column(
+                    children: [
+                      for (int i = 0; i < separateBlocks.length; i++)
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                EmployeeRegWidget(
+                                    emp: widget.emp,
+                                    reg: separateBlocks[i].regulation),
+                                const SeparationWidget(),
+                                AvailableTimeSelection(
+                                  combinedRegulationsWithTimeOptions: null,
+                                  regulationWithTimeOptions: separateBlocks[i],
+                                  addWeek: addWeek,
+                                  selectSeparatedTime: () {
+                                    selectSeparatedTime(i, separateBlocks[i]);
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       );
