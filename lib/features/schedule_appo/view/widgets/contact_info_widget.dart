@@ -10,7 +10,6 @@ import 'package:vteme_tg_miniapp/core/models/appointment.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
-import 'package:vteme_tg_miniapp/core/models/time_slot_option.dart';
 import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/main.dart';
 
@@ -92,21 +91,6 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
     }
     serviceName = serviceName.substring(0, serviceName.length - 3);
     return (duration: duration, serviceName: serviceName);
-  }
-
-  DateTime getDate(List<List<TimeSlotOption>> timeSlotsByDate) {
-    // regs.timeSlotsByDate;
-    late DateTime date;
-    List<TimeSlotOption> timeList = [];
-    for (var e in timeSlotsByDate) {
-      timeList.addAll(e
-          .where(
-            (element) => element.isSelected,
-          )
-          .toList());
-    }
-    date = timeList.single.time;
-    return date;
   }
 
   void clearAndShowSnackBar(String text, {Duration? duration}) {

@@ -10,7 +10,7 @@ class SelectedCombined extends SelectedRegulationOption {
 }
 
 class SelectedSeparated extends SelectedRegulationOption {
-  final List<RegulationWithTimeOptions> separated;
+  List<RegulationWithTimeOptions> separated;
 
   SelectedSeparated(this.separated);
 }

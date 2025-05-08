@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
 import 'package:vteme_tg_miniapp/core/models/combined_regulation_with_time_options.dart';
@@ -56,24 +55,27 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
   int finalDuration = 0;
 
   SelectedRegulationOption? selectedRegulationOption;
+  List<Appointment> allAppos = [];
 
   @override
   void initState() {
     super.initState();
+    allAppos = widget.appos;
+
     datesList =
         List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
 
     combinedBlock = CombinedRegulationsWithTimeOptions(
       regulations: widget.regs,
       dates: List.from(datesList),
-      allAppointments: widget.appos,
+      allAppointments: allAppos,
     );
 
     separateBlocks = widget.regs
         .map((reg) => RegulationWithTimeOptions(
               regulation: reg,
               dates: List.from(datesList),
-              allAppointments: widget.appos,
+              allAppointments: allAppos,
             ))
         .toList();
 
@@ -83,6 +85,12 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     countFinalVars();
 
     selectedRegulationWithTimeOptions.addListener(_onTimeChanged);
+  }
+
+  void regenerateTimeBlocks() {
+    for (var block in separateBlocks) {
+      block.updateDatesAndRegenerate(List.from(datesList));
+    }
   }
 
   void _onTimeChanged() {
@@ -143,35 +151,110 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
           selectedCount++;
         }
       }
+      print('widget.regs.length');
+      print(widget.regs.length);
+      print(selectedCount);
       return widget.regs.length == selectedCount;
     }
 
     return false;
   }
 
-  void selectSeparatedTime(
-      int index, RegulationWithTimeOptions regulationWithTimeOptions) {
+  void selectSeparatedTime(int index, RegulationWithTimeOptions selectedBlock) {
     var value = selectedRegulationWithTimeOptions.value;
+
     if (value == null) {
       selectedRegulationWithTimeOptions.value = SelectedSeparated([]);
       value = selectedRegulationWithTimeOptions.value;
     }
+
     if (value is SelectedSeparated) {
+      // Убедимся, что список нужной длины
       while (value.separated.length < widget.regs.length) {
         value.separated.add(
           RegulationWithTimeOptions(
-            regulation: widget.regs[0],
-            // или другой способ
+            regulation: widget.regs[value.separated.length],
             dates: [],
             allAppointments: [],
           ),
         );
       }
 
-      value.separated[index] = regulationWithTimeOptions;
-      print('select time');
+      // Обновляем текущий блок
+      value.separated[index] = selectedBlock;
+
+      // Если пользователь выбрал дату/время
+      if (selectedBlock.isTimeSelected) {
+        // 1. Вернуть все даты назад (сбросить до полного списка)
+        for (int i = 0; i < value.separated.length; i++) {
+          if (i == index) continue;
+
+          value.separated[i].dates = List.from(datesList);
+          value.separated[i]
+              .updateDatesAndRegenerate(datesList); // <- вернуть все слоты
+        }
+
+        // 2. Удалить пересекающиеся слоты с новым выбором
+        for (int i = 0; i < value.separated.length; i++) {
+          if (i == index) continue;
+
+          value.separated[i].removeOverlappingSlotsWith(selectedBlock);
+        }
+
+        setState(() {});
+      }
     }
   }
+
+  // void selectSeparatedTime(
+  //     int index, RegulationWithTimeOptions regulationWithTimeOptions) {
+  //   var value = selectedRegulationWithTimeOptions.value;
+  //   if (value == null) {
+  //     selectedRegulationWithTimeOptions.value = SelectedSeparated([]);
+  //     value = selectedRegulationWithTimeOptions.value;
+  //   }
+  //   if (value is SelectedSeparated) {
+  //     while (value.separated.length < widget.regs.length) {
+  //       value.separated.add(
+  //         RegulationWithTimeOptions(
+  //           regulation: widget.regs[0],
+  //           dates: [],
+  //           allAppointments: [],
+  //         ),
+  //       );
+  //     }
+  //
+  //     value.separated[index] = regulationWithTimeOptions;
+  //     print(regulationWithTimeOptions.timeSlotsByDate);
+  //
+  //     late bool dateSelected;
+  //     try {
+  //       DateTime date = getDate(regulationWithTimeOptions.timeSlotsByDate);
+  //       dateSelected = true;
+  //     } catch (e) {
+  //       dateSelected = false;
+  //     }
+  //
+  //     if (dateSelected) {
+  //       regenerateTimeBlocks();
+  //       print(value.separated);
+  //       print('select time');
+  //
+  //       List<RegulationWithTimeOptions> list = value.separated;
+  //
+  //       print(list);
+  //       // list.removeAt(index);
+  //       for (var e in list) {
+  //         if (list[index] == e) continue;
+  //         e.removeOverlappingSlotsWith(regulationWithTimeOptions);
+  //       }
+  //
+  //       print(list);
+  //       value.separated = list;
+  //       setState(() {});
+  //     }
+  //   }
+  // }
 
   void countFinalVars() {
     finalDuration = 0;

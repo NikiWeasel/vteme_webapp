@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
+import 'package:vteme_tg_miniapp/core/models/time_slot_option.dart';
 
 List<DateTime> getAvailableTimeSlots({
   required List<Appointment> appos,
@@ -73,4 +74,19 @@ void showSnackBar(
     ),
     duration: duration ?? const Duration(seconds: 1, milliseconds: 500),
   ));
+}
+
+DateTime getDate(List<List<TimeSlotOption>> timeSlotsByDate) {
+  // regs.timeSlotsByDate;
+  late DateTime date;
+  List<TimeSlotOption> timeList = [];
+  for (var e in timeSlotsByDate) {
+    timeList.addAll(e
+        .where(
+          (element) => element.isSelected,
+        )
+        .toList());
+  }
+  date = timeList.single.time;
+  return date;
 }
