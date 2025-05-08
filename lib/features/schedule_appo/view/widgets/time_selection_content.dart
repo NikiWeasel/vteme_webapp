@@ -73,6 +73,10 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
               allAppointments: widget.appos,
             ))
         .toList();
+
+    print('separateBlocks.length');
+    print(separateBlocks.length);
+
     countFinalVars();
 
     selectedRegulationWithTimeOptions.addListener(_onTimeChanged);
@@ -86,7 +90,7 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     //     is CombinedRegulationsWithTimeOptions) {}
     selectedRegulationOption = selectedRegulationWithTimeOptions.value;
 
-    // print('NOTIFIER');
+    print('NOTIFIER');
   }
 
   void onContinueButton() {
@@ -98,6 +102,8 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     widget.selectRegsWithTime(selectedRegulationOption!);
 
     selectedRegulationWithTimeOptions.value = null;
+    //
+    // widget.onSelected(selectedRegs);
   }
 
   bool isTimeSelected(SelectedRegulationOption selectedRegulationOption) {
@@ -112,8 +118,13 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
           datesSelected++;
         }
       }
-      return (timeSlotsByDate.length == datesSelected);
+
+      // print('timeSlotsByDate.length');
+      // print(widget.regs.length);
+      // print(datesSelected);
+      return (1 == datesSelected);
     }
+
     if (selectedRegulationOption is SelectedSeparated) {
       final separatedRegsList = selectedRegulationOption.separated;
 
@@ -125,16 +136,11 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
         final hasSelection = e.timeSlotsByDate.any(
           (slotList) => slotList.any((slot) => slot.isSelected),
         );
-        // print(e
-        //     .where(
-        //       (element) => element.isSelected,
-        // )
-        //     .toList());
         if (hasSelection) {
           selectedCount++;
         }
       }
-      return selectedCount == separatedRegsList.length;
+      return widget.regs.length == separatedRegsList.length;
     }
 
     return false;

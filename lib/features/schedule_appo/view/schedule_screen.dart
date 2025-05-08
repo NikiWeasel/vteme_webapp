@@ -11,6 +11,7 @@ import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/appo_type_widget.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
+import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/contact_info_widget.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_selection_content.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/reg_selection_content.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection_content.dart';
@@ -148,6 +149,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           ],
                         );
                       }
+                      //TODO Кнопки назад не работают
 
                       //TODO из-за LayoutBuilder растягивается контент, нужен фикс
                       if (selectedRegs != null && selectedEmployee == null) {
@@ -187,6 +189,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               : [],
                           emp: selectedEmployee!,
                           selectRegsWithTime: selectRegsWithTime,
+                        );
+                      }
+
+                      if (selectedRegs != null &&
+                          selectedEmployee != null &&
+                          selectedRegsWithOption != null) {
+                        return ContactInfoWidget(
+                          selectedEmployee: selectedEmployee!,
+                          selectedRegs: selectedRegs!,
+                          selectedRegsWithOption: selectedRegsWithOption!,
                         );
                       }
 

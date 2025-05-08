@@ -119,6 +119,8 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
         ? MediaQuery.of(context).size.width
         : 800;
 
+    //TODO Возможно стоит сделать время сессии записи
+
     //TODO сделать выбор не более 5 услуг
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -190,7 +192,7 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
                         controller: controller,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
-                            hintText: 'Поиск по названию, длительности',
+                            labelText: 'Поиск по названию, длительности',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

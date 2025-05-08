@@ -93,7 +93,7 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
                   controller: controller,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
-                      hintText: 'Поиск по имени, типам услуг',
+                      labelText: 'Поиск по имени, типам услуг',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

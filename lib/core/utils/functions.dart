@@ -65,9 +65,12 @@ List<DateTime> getAvailableTimeSlots({
   return freeSlots;
 }
 
-void showSnackBar({required BuildContext context, required String text}) {
+void showSnackBar(
+    {required BuildContext context, required String text, Duration? duration}) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Center(
-    child: Text(text),
-  )));
+    content: Center(
+      child: Text(text),
+    ),
+    duration: duration ?? const Duration(seconds: 1, milliseconds: 500),
+  ));
 }
