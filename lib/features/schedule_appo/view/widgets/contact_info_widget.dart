@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +7,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:vteme_tg_miniapp/core/bloc/actions_appointments/actions_appointment_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
-import 'package:vteme_tg_miniapp/core/models/combined_regulation_with_time_options.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
@@ -21,11 +19,14 @@ class ContactInfoWidget extends StatefulWidget {
       {super.key,
       required this.selectedEmployee,
       required this.selectedRegs,
-      required this.selectedRegsWithOption});
+      required this.selectedRegsWithOption,
+      required this.onBackPressed});
 
   final Employee selectedEmployee;
   final List<Regulation> selectedRegs;
   final SelectedRegulationOption selectedRegsWithOption;
+
+  final void Function() onBackPressed;
 
   @override
   State<ContactInfoWidget> createState() => _ContactInfoWidgetState();
@@ -222,6 +223,9 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: widget.onBackPressed,
+              icon: const Icon(Icons.arrow_back)),
           title: const Text('Контактная информация'),
         ),
         body: Form(

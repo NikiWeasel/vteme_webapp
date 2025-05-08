@@ -1,20 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:telegram_web_app/telegram_web_app.dart' as tg;
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
-import 'package:vteme_tg_miniapp/core/theme.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_tile.dart';
-import 'package:vteme_tg_miniapp/main.dart';
 
 class EmployeeSelectionContent extends StatefulWidget {
   const EmployeeSelectionContent(
-      {super.key, required this.employees, required this.onSelected});
+      {super.key,
+      required this.employees,
+      required this.onSelected,
+      required this.onBackPressed});
 
   final List<Employee> employees;
   final void Function(Employee) onSelected;
+
+  final void Function() onBackPressed;
 
   @override
   State<EmployeeSelectionContent> createState() =>
@@ -82,6 +82,9 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: widget.onBackPressed,
+            icon: const Icon(Icons.arrow_back)),
         title: const Text('Выбор специалиста'),
         actions: [
           IconButton(onPressed: reload, icon: const Icon(Icons.autorenew))

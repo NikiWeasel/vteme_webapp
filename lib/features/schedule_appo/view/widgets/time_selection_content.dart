@@ -30,6 +30,7 @@ class TimeSelectionContent extends StatefulWidget {
     required this.appos,
     required this.emp,
     required this.selectRegsWithTime,
+    required this.onBackPressed,
   });
 
   final List<Regulation> regs;
@@ -37,6 +38,8 @@ class TimeSelectionContent extends StatefulWidget {
   final Employee emp;
 
   final void Function(SelectedRegulationOption) selectRegsWithTime;
+
+  final void Function() onBackPressed;
 
   @override
   State<TimeSelectionContent> createState() => _TimeSelectionContentState();
@@ -140,7 +143,7 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
           selectedCount++;
         }
       }
-      return widget.regs.length == separatedRegsList.length;
+      return widget.regs.length == selectedCount;
     }
 
     return false;
@@ -216,6 +219,15 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: widget.onBackPressed,
+              icon: const Icon(Icons.arrow_back)),
+          title: const Text('Выбор времени'),
+          actions: [
+            // IconButton(onPressed: reload, icon: const Icon(Icons.autorenew))
+          ],
+        ),
         bottomNavigationBar: Container(
           // height: 45,
           width: double.infinity,

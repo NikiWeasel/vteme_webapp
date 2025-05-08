@@ -8,10 +8,15 @@ import 'package:vteme_tg_miniapp/features/home/view/widgets/regulation_tile.dart
 
 class RegSelectionContent extends StatefulWidget {
   const RegSelectionContent(
-      {super.key, required this.regs, required this.onSelected});
+      {super.key,
+      required this.regs,
+      required this.onSelected,
+      required this.onBackPressed});
 
   final List<Regulation> regs;
   final void Function(List<Regulation>) onSelected;
+
+  final void Function() onBackPressed;
 
   @override
   State<RegSelectionContent> createState() => _RegSelectionContentState();
@@ -144,6 +149,9 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: widget.onBackPressed,
+              icon: const Icon(Icons.arrow_back)),
           title: const Text('Выбор услуг'),
           actions: [
             IconButton(onPressed: reload, icon: const Icon(Icons.autorenew))

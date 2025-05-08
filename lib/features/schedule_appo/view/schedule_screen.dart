@@ -1,27 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:telegram_web_app/telegram_web_app.dart' as tg;
-import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
-import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
-import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/appo_type_widget.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
+import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
+import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/appo_type_widget.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/contact_info_widget.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_selection_content.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/reg_selection_content.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection_content.dart';
 
 enum AppointmentStep {
-  selectStart,
   selectEmployee,
   selectRegulations,
   selectTime,
-  contactInfo
 }
 
 class ScheduleScreen extends StatefulWidget {
@@ -35,32 +30,37 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  tg.BackButton get backButton => tg.TelegramWebApp.instance.backButton;
-
   Employee? selectedEmployee;
   List<Regulation>? selectedRegs;
   SelectedRegulationOption? selectedRegsWithOption;
 
+  List<AppointmentStep> appoSteps = [];
+
   @override
   void initState() {
-    backButton.onClick(onBackPressed);
-    backButton.show();
-
+    super.initState();
     selectedEmployee = widget.employee;
     if (widget.service != null) selectedRegs = [widget.service!];
 
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    backButton.hide();
-    backButton.offClick(onBackPressed);
-    super.dispose();
+    appoSteps.clear();
   }
 
   void onBackPressed() {
-    GoRouter.of(context).pop();
+    if (appoSteps.isEmpty) {
+      context.go('/home');
+      return;
+    }
+    setState(() {
+      switch (appoSteps.last) {
+        case AppointmentStep.selectRegulations:
+          selectedRegs = null;
+        case AppointmentStep.selectEmployee:
+          selectedEmployee = null;
+        case AppointmentStep.selectTime:
+          selectedRegsWithOption = null;
+      }
+    });
+    appoSteps.removeLast();
   }
 
   void reload() {
@@ -72,18 +72,27 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     setState(() {
       selectedEmployee = e;
     });
+    appoSteps.add(AppointmentStep.selectEmployee);
   }
 
   void selectRegs(List<Regulation> regs) {
     setState(() {
       selectedRegs = regs;
     });
+    appoSteps.add(AppointmentStep.selectRegulations);
   }
 
   void selectRegsWithTime(SelectedRegulationOption selectedRegulationOption) {
     setState(() {
       selectedRegsWithOption = selectedRegulationOption;
     });
+    appoSteps.add(AppointmentStep.selectTime);
+  }
+
+  void addAppoStep(AppointmentStep appoStep) {
+    if (appoSteps.contains(appoStep)) return;
+
+    appoSteps.add(appoStep);
   }
 
   @override
@@ -127,7 +136,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           ],
                         );
                       }
-                      //TODO Кнопки назад не работают
                       if (regState is LocalRegulationsLoadedState &&
                           empState is LocalEmployeesLoaded &&
                           appoState is LocalAppointmentsLoaded) {
@@ -139,6 +147,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               child: EmployeeSelectionContent(
                                 employees: empState.employees,
                                 onSelected: selectEmployee,
+                                onBackPressed: onBackPressed,
                               ),
                             ),
                           );
@@ -148,6 +157,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           return RegSelectionContent(
                             regs: regState.regulations,
                             onSelected: selectRegs,
+                            onBackPressed: onBackPressed,
                           );
                         }
 
@@ -159,6 +169,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             appos: appoState.appointments,
                             emp: selectedEmployee!,
                             selectRegsWithTime: selectRegsWithTime,
+                            onBackPressed: onBackPressed,
                           );
                         }
 
@@ -169,6 +180,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             selectedEmployee: selectedEmployee!,
                             selectedRegs: selectedRegs!,
                             selectedRegsWithOption: selectedRegsWithOption!,
+                            onBackPressed: onBackPressed,
                           );
                         }
 
