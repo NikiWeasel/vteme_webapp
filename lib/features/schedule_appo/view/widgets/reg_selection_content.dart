@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
+import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/regulation_tile.dart';
 
 class RegSelectionContent extends StatefulWidget {
@@ -77,7 +80,20 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     });
   }
 
+  int countSelectedRegs() {
+    var list = boolMap.entries
+        .where(
+          (element) => element.value == true,
+        )
+        .toList();
+    return list.length;
+  }
+
   void onChangedCheckBox(String id, bool value) {
+    if (countSelectedRegs() == 3 && value == true) {
+      showSnackBar(context: context, text: 'Нельзя выбрать больше 3 услуг');
+      return;
+    }
     setState(() {
       boolMap[id] = value;
     });
@@ -113,6 +129,10 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     }
   }
 
+  void reload() {
+    context.read<LocalRegulationsBloc>().add(FetchRegulationsData());
+  }
+
   @override
   Widget build(BuildContext context) {
     double activeWidth = MediaQuery.of(context).size.width <= 800
@@ -121,10 +141,14 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
 
     //TODO Возможно стоит сделать время сессии записи
 
-    //TODO сделать выбор не более 5 услуг
-
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        appBar: AppBar(
+          title: const Text('Выбор услуг'),
+          actions: [
+            IconButton(onPressed: reload, icon: const Icon(Icons.autorenew))
+          ],
+        ),
         bottomNavigationBar: selectedRegs.isNotEmpty
             ? Container(
                 // height: 45,
@@ -170,9 +194,7 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
         body: Align(
           alignment: Alignment.center,
           child: SizedBox(
-            width: activeWidth < 800
-                ? constraints.maxWidth
-                : constraints.maxWidth / 2,
+            width: activeWidth,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

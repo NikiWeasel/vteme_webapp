@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:telegram_web_app/telegram_web_app.dart' as tg;
+import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/theme.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_tile.dart';
@@ -20,7 +22,6 @@ class EmployeeSelectionContent extends StatefulWidget {
 }
 
 class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
-  //TODO Скорее всего лучше будет несколько экранов сделать для более простой навигации назад. А МОЖЕТ И НЕТ
   bool isTextFieldEmpty = true;
   late List<Employee> filteredEmployees;
 
@@ -73,57 +74,69 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
     });
   }
 
+  void reload() {
+    context.read<LocalEmployeesBloc>().add(FetchAllEmployeesData());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16))),
-            child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 8.0,
-                ),
-                child: TextField(
-                  controller: controller,
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: InputDecoration(
-                      labelText: 'Поиск по имени, типам услуг',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: isTextFieldEmpty
-                          ? null
-                          : IconButton(
-                              onPressed: deleteString,
-                              icon: const Icon(Icons.close),
-                            )),
-                  onChanged: onChanged,
-                )),
-          ),
-        ),
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                for (var e in filteredEmployees)
-                  EmployeeTile(
-                      employee: e,
-                      onTap: () {
-                        widget.onSelected(e);
-                      })
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Выбор специалиста'),
+        actions: [
+          IconButton(onPressed: reload, icon: const Icon(Icons.autorenew))
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16))),
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                  ),
+                  child: TextField(
+                    controller: controller,
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                        labelText: 'Поиск по имени, типам услуг',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: isTextFieldEmpty
+                            ? null
+                            : IconButton(
+                                onPressed: deleteString,
+                                icon: const Icon(Icons.close),
+                              )),
+                    onChanged: onChanged,
+                  )),
             ),
           ),
-        )
-      ],
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  for (var e in filteredEmployees)
+                    EmployeeTile(
+                        employee: e,
+                        onTap: () {
+                          widget.onSelected(e);
+                        })
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

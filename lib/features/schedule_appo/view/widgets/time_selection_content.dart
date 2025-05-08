@@ -251,9 +251,7 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
         body: Align(
           alignment: Alignment.center,
           child: SizedBox(
-            width: activeWidth < 800
-                ? constraints.maxWidth
-                : constraints.maxWidth / 2,
+            width: activeWidth,
             child: Column(
               children: [
                 if (widget.regs.length > 1)

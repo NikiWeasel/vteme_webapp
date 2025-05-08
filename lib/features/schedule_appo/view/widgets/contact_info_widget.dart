@@ -229,9 +229,7 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
           child: Align(
             alignment: Alignment.center,
             child: SizedBox(
-              width: activeWidth < 800
-                  ? constraints.maxWidth
-                  : constraints.maxWidth / 2,
+              width: activeWidth,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Column(

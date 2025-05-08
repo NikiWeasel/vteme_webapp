@@ -202,10 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 )),
                             for (var r in regs)
-                              ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: activeWidth,
-                                  ),
+                              SizedBox(
+                                  width: activeWidth,
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0,

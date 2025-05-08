@@ -59,12 +59,6 @@ class _EmployeesReviewWidgetState extends State<EmployeesReviewWidget> {
     var widgetHeight = 83.0 * widget.emps.length;
 
     var height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
-    // if (activeWidth < 800) {
-    //   height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8 + 100;
-    // } else {
-    //   height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
-    // }
-    // // height = widgetHeight < 407.0 ? 407.0 : widgetHeight - 8;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

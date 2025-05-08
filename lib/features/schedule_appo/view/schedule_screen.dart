@@ -16,6 +16,14 @@ import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_se
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/reg_selection_content.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/time_selection_content.dart';
 
+enum AppointmentStep {
+  selectStart,
+  selectEmployee,
+  selectRegulations,
+  selectTime,
+  contactInfo
+}
+
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key, this.employee, this.service});
 
@@ -32,8 +40,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Employee? selectedEmployee;
   List<Regulation>? selectedRegs;
   SelectedRegulationOption? selectedRegsWithOption;
-
-  String? title;
 
   @override
   void initState() {
@@ -80,29 +86,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
-  void changeTitle() {
-    if (selectedEmployee != null && selectedRegs == null) {
-      setState(() {
-        title = 'Выбор услуг';
-      });
-      return;
-    }
-    if (selectedRegs != null && selectedEmployee == null) {
-      setState(() {
-        title = 'Выбор специалиста';
-      });
-      return;
-    }
-    title = null;
-  }
-
   @override
   Widget build(BuildContext context) {
     double activeWidth = MediaQuery.of(context).size.width <= 800
         ? MediaQuery.of(context).size.width
         : 800;
-
-    changeTitle();
 
     return LayoutBuilder(builder: (context, constraints) {
       return BlocBuilder<LocalRegulationsBloc, FetchRegulationsState>(
@@ -112,16 +100,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               return BlocBuilder<LocalEmployeesBloc, LocalEmployeesState>(
                 builder: (context, empState) {
                   return Scaffold(
-                    appBar: title != null
-                        ? AppBar(
-                            title: Text(title!),
-                            actions: [
-                              IconButton(
-                                  onPressed: reload,
-                                  icon: const Icon(Icons.autorenew))
-                            ],
-                          )
-                        : null,
                     body: Builder(builder: (context) {
                       if (regState is LocalRegulationsErrorState ||
                           empState is LocalEmployeesError ||
@@ -150,89 +128,85 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         );
                       }
                       //TODO Кнопки назад не работают
+                      if (regState is LocalRegulationsLoadedState &&
+                          empState is LocalEmployeesLoaded &&
+                          appoState is LocalAppointmentsLoaded) {
+                        if (selectedRegs != null && selectedEmployee == null) {
+                          return Align(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: activeWidth,
+                              child: EmployeeSelectionContent(
+                                employees: empState.employees,
+                                onSelected: selectEmployee,
+                              ),
+                            ),
+                          );
+                        }
 
-                      //TODO из-за LayoutBuilder растягивается контент, нужен фикс
-                      if (selectedRegs != null && selectedEmployee == null) {
+                        if (selectedEmployee != null && selectedRegs == null) {
+                          return RegSelectionContent(
+                            regs: regState.regulations,
+                            onSelected: selectRegs,
+                          );
+                        }
+
+                        if (selectedRegs != null &&
+                            selectedEmployee != null &&
+                            selectedRegsWithOption == null) {
+                          return TimeSelectionContent(
+                            regs: selectedRegs!,
+                            appos: appoState.appointments,
+                            emp: selectedEmployee!,
+                            selectRegsWithTime: selectRegsWithTime,
+                          );
+                        }
+
+                        if (selectedRegs != null &&
+                            selectedEmployee != null &&
+                            selectedRegsWithOption != null) {
+                          return ContactInfoWidget(
+                            selectedEmployee: selectedEmployee!,
+                            selectedRegs: selectedRegs!,
+                            selectedRegsWithOption: selectedRegsWithOption!,
+                          );
+                        }
+
                         return Align(
                           alignment: Alignment.center,
                           child: SizedBox(
-                            width: activeWidth < 800
-                                ? constraints.maxWidth
-                                : constraints.maxWidth / 2,
-                            child: EmployeeSelectionContent(
-                              employees: (empState is LocalEmployeesLoaded)
-                                  ? empState.employees
-                                  : [],
-                              onSelected: selectEmployee,
+                            width: activeWidth,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Text(
+                                    'Новая запись',
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                ),
+                                Wrap(
+                                  children: [
+                                    AppoTypeWidget(
+                                        text: 'Выбрать услуги',
+                                        onTap: () {
+                                          // context.pu
+                                        }),
+                                    AppoTypeWidget(
+                                        text: 'Выбрать специалиста',
+                                        onTap: () {}),
+                                  ],
+                                )
+                              ],
                             ),
                           ),
                         );
                       }
-
-                      //TODO: Сделать бы нормальный CircularProgressIndicator, если не Loaded
-                      if (selectedEmployee != null && selectedRegs == null) {
-                        return RegSelectionContent(
-                          regs: (regState is LocalRegulationsLoadedState)
-                              ? regState.regulations
-                              : [],
-                          onSelected: selectRegs,
-                        );
-                      }
-
-                      if (selectedRegs != null &&
-                          selectedEmployee != null &&
-                          selectedRegsWithOption == null) {
-                        return TimeSelectionContent(
-                          regs: selectedRegs!,
-                          appos: (appoState is LocalAppointmentsLoaded)
-                              ? appoState.appointments
-                              : [],
-                          emp: selectedEmployee!,
-                          selectRegsWithTime: selectRegsWithTime,
-                        );
-                      }
-
-                      if (selectedRegs != null &&
-                          selectedEmployee != null &&
-                          selectedRegsWithOption != null) {
-                        return ContactInfoWidget(
-                          selectedEmployee: selectedEmployee!,
-                          selectedRegs: selectedRegs!,
-                          selectedRegsWithOption: selectedRegsWithOption!,
-                        );
-                      }
-
-                      return Align(
+                      return const Align(
                         alignment: Alignment.center,
-                        child: SizedBox(
-                          width: activeWidth < 800
-                              ? constraints.maxWidth
-                              : constraints.maxWidth / 2,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text(
-                                  'Новая запись',
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                              ),
-                              Wrap(
-                                children: [
-                                  AppoTypeWidget(
-                                      text: 'Выбрать услуги',
-                                      onTap: () {
-                                        // context.pu
-                                      }),
-                                  AppoTypeWidget(
-                                      text: 'Выбрать специалиста',
-                                      onTap: () {}),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
+                        child: CircularProgressIndicator(),
                       );
                     }),
                   );
