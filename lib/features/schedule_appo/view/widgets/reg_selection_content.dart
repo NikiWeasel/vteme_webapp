@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
@@ -212,13 +211,15 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
                     decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.surface,
                         borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16))),
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(12))),
                     child: Padding(
                       padding: const EdgeInsets.only(
                         top: 8.0,
                       ),
                       child: TextField(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
                         controller: controller,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(

@@ -1,20 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 // import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vteme_tg_miniapp/constants.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
-import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
-import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employees_review_widget.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/regulation_tile.dart';
-import 'package:vteme_tg_miniapp/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -108,10 +104,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Image.asset(
-                                      'assets/images/logo.png',
-                                      height: 70,
-                                    ),
+                                    Theme.of(context).colorScheme.brightness ==
+                                            Brightness.dark
+                                        ? Image.asset(
+                                            'assets/images/logo-dark.png',
+                                            height: 70,
+                                          )
+                                        : Image.asset(
+                                            'assets/images/logo.png',
+                                            height: 70,
+                                          ),
                                     const Spacer(),
                                     Column(
                                       children: [
@@ -119,7 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'г Хабаровск, ул Нерчинская, 6',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleSmall,
+                                              .titleSmall!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface),
                                         ),
                                         TextButton(
                                             onPressed: launchURL,
@@ -127,7 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               'Показать на карте',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .titleSmall,
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface),
                                             ))
                                       ],
                                     )
@@ -146,7 +156,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           .textTheme
                                           .titleLarge!
                                           .copyWith(
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface),
                                     ),
                                     TextSpan(
                                       text: '${emps.length}',
@@ -156,10 +169,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           .copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .color
-                                                ?.withOpacity(0.5),
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.5),
                                           ),
                                     )
                                   ],
@@ -182,7 +194,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .textTheme
                                             .titleLarge!
                                             .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface),
                                       ),
                                       TextSpan(
                                         text: '${regs.length}',
@@ -192,10 +207,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .color
-                                                  ?.withOpacity(0.5),
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: 0.5),
                                             ),
                                       )
                                     ],
@@ -217,6 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       isSecondaryScreen: false,
                                     ),
                                   )),
+                            const SizedBox(
+                              height: 16,
+                            )
                           ]),
                     ),
                   ),

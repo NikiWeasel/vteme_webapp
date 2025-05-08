@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PhotoSlider extends StatefulWidget {
@@ -77,7 +76,7 @@ class _PhotoSliderState extends State<PhotoSlider> {
                                           color: Theme.of(context)
                                               .colorScheme
                                               .primaryContainer
-                                              .withOpacity(0.5),
+                                              .withValues(alpha: 0.5),
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(0.5))),
                                       height:
@@ -119,11 +118,18 @@ class _PhotoSliderState extends State<PhotoSlider> {
                   margin: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 4.0),
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: (Theme.of(context).brightness == Brightness.light
-                              ? Colors.white
-                              : Colors.black)
-                          .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+                    shape: BoxShape.circle,
+                    color: Colors.white
+                        .withValues(alpha: _current == entry.key ? 0.9 : 0.4),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }).toList(),

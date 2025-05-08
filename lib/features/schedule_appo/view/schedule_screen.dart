@@ -193,11 +193,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Text(
-                                    'Новая запись',
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
-                                  ),
+                                  child: Text('Новая запись',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface)),
                                 ),
                                 Wrap(
                                   children: [

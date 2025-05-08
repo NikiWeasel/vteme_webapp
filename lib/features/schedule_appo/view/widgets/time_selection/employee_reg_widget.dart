@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
@@ -23,7 +22,10 @@ class EmployeeRegWidget extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
                 '${emp.name} ${emp.surname}',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
             )
           ],
@@ -31,7 +33,11 @@ class EmployeeRegWidget extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        Text(reg.name)
+        Text(reg.name,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Theme.of(context).colorScheme.onSurface))
       ],
     );
   }

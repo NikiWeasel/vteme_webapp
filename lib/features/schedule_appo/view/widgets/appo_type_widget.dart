@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppoTypeWidget extends StatelessWidget {
@@ -13,7 +12,7 @@ class AppoTypeWidget extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: const BorderRadius.all(Radius.circular(16)),
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
       child: SizedBox(
         height: 130,
         width: 130,
@@ -23,7 +22,12 @@ class AppoTypeWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [for (var t in fragmentedText) Text(t)],
+                children: [
+                  for (var t in fragmentedText)
+                    Text(t,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface))
+                ],
               ),
             ),
           ),

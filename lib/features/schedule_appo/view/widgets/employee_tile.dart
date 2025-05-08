@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 
 class EmployeeTile extends StatelessWidget {
@@ -20,7 +18,7 @@ class EmployeeTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(0),
           ),
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(12),
           ),
           1,
         ),

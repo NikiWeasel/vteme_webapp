@@ -243,6 +243,8 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                       height: 8,
                     ),
                     TextFormField(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                       controller: nameController,
                       decoration: InputDecoration(
                         labelText: 'Имя',
@@ -264,6 +266,8 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                       height: 8,
                     ),
                     TextFormField(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                       controller: surnameController,
                       decoration: InputDecoration(
                         labelText: 'Фамилия',
@@ -285,6 +289,8 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                       height: 8,
                     ),
                     TextFormField(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                       controller: numberController,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [phoneMaskFormatter],
