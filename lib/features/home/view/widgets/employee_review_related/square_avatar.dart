@@ -14,7 +14,7 @@ class SquareAvatar extends StatelessWidget {
       width: size,
       height: size,
       foregroundDecoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
           image: foregroundImage!,
           // onError: onForegroundImageError,

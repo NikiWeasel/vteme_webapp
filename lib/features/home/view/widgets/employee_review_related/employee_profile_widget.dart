@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 
 class EmployeeProfileWidget extends StatelessWidget {
@@ -21,7 +19,7 @@ class EmployeeProfileWidget extends StatelessWidget {
         : 800;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(12),
       onTap: selectEmployee,
       child: Card(
         color: isSelected
@@ -51,14 +49,26 @@ class EmployeeProfileWidget extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium!
-                            .copyWith(fontWeight: FontWeight.bold),
+                            .copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: isSelected
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .onSecondaryContainer
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary),
                         overflow: TextOverflow.fade,
                         softWrap: false,
                       ),
                       Text(
                         employee.number,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
+                            color: isSelected
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer
+                                : Theme.of(context).colorScheme.onSecondary),
                         overflow: TextOverflow.fade,
                         softWrap: false,
                       ),

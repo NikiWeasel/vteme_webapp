@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-ThemeData getTheme(int seedColor) {
+ThemeData getTheme(int seedColor, bool isDark) {
   return ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.light,
+      brightness: isDark ? Brightness.dark : Brightness.light,
       seedColor: Color(seedColor),
     ),
     textTheme: GoogleFonts.montserratTextTheme(),

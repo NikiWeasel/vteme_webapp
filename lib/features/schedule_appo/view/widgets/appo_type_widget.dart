@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppoTypeWidget extends StatelessWidget {
@@ -9,14 +8,28 @@ class AppoTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> fragmentedText = text.split(' ');
+
     return InkWell(
       onTap: onTap,
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
       child: SizedBox(
-        height: 120,
-        width: 120,
+        height: 130,
+        width: 130,
         child: Card(
           child: Center(
-            child: Text(text),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var t in fragmentedText)
+                    Text(t,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface))
+                ],
+              ),
+            ),
           ),
         ),
       ),

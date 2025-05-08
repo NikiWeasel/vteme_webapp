@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/photo_slider.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/rectangle_profile_header.dart';
-import 'package:vteme_tg_miniapp/features/home/view/widgets/employee_review_related/square_avatar.dart';
 
 class EmployeeDetails extends StatelessWidget {
   const EmployeeDetails(
@@ -22,6 +21,10 @@ class EmployeeDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     var descriptionWidth = width * 2 / 3 - 32;
 
+    void onTap(Employee e) {
+      context.go('/schedule_appo', extra: {'employee': e});
+    }
+
     return LayoutBuilder(builder: (context, constrains) {
       double activeWidth = MediaQuery.of(context).size.width <= 800
           ? MediaQuery.of(context).size.width
@@ -30,7 +33,7 @@ class EmployeeDetails extends StatelessWidget {
       if (activeWidth < 800) {
         return Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(12),
               color: Theme.of(context).colorScheme.secondaryContainer),
           width: width,
           // height: height * 2,
@@ -86,7 +89,10 @@ class EmployeeDetails extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: ElevatedButton(
-                        onPressed: () {}, child: const Text('Записаться')),
+                        onPressed: () {
+                          onTap(employee);
+                        },
+                        child: const Text('Записаться')),
                   )
                 ],
               ),
@@ -126,14 +132,26 @@ class EmployeeDetails extends StatelessWidget {
                         child: SizedBox(
                           width: descriptionWidth,
                           child: Card(
+                            color: Theme.of(context).colorScheme.surface,
                             child: SingleChildScrollView(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: employee.description == ''
-                                    ? const Padding(
-                                        padding: EdgeInsets.only(top: 100),
-                                        child:
-                                            Center(child: Text('Нет описания')),
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 100),
+                                        child: Center(
+                                          child: Text(
+                                            'Нет описания',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge!
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface),
+                                          ),
+                                        ),
                                       )
                                     : Text(
                                         employee.description,
@@ -156,7 +174,10 @@ class EmployeeDetails extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: ElevatedButton(
-                            onPressed: () {}, child: const Text('Записаться')),
+                            onPressed: () {
+                              onTap(employee);
+                            },
+                            child: const Text('Записаться')),
                       )
                     ],
                   ),

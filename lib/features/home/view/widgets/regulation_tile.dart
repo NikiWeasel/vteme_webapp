@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/theme.dart';
 
@@ -32,7 +30,7 @@ class RegulationTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(0),
           ),
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(12),
           ),
           1,
         ),
