@@ -10,8 +10,7 @@ class AgreementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            const Text('Пользовательское соглашение веб-приложения «В теме»'),
+        title: const Text('Пользовательское соглашение'),
         leading: IconButton(
           onPressed: () {
             context.pop();
@@ -19,8 +18,11 @@ class AgreementScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
         ),
       ),
-      body: const SingleChildScrollView(
-        child: SizedBox(height: 1500, child: Markdown(data: kAgreement)),
+      body: SingleChildScrollView(
+        child: Container(
+            color: Colors.white,
+            height: 1500,
+            child: const Markdown(data: kAgreement)),
       ),
     );
   }
