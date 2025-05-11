@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
+import 'package:vteme_tg_miniapp/core/models/category.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
+import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_tile.dart';
 
@@ -9,10 +11,14 @@ class EmployeeSelectionContent extends StatefulWidget {
   const EmployeeSelectionContent(
       {super.key,
       required this.employees,
+      required this.allCategories,
       required this.onSelected,
-      required this.onBackPressed});
+      required this.onBackPressed,
+      required this.selectedRegulations});
 
   final List<Employee> employees;
+  final List<Regulation> selectedRegulations;
+  final List<RegCategory> allCategories;
   final void Function(Employee) onSelected;
 
   final void Function() onBackPressed;
@@ -26,13 +32,19 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
   bool isTextFieldEmpty = true;
   late List<Employee> filteredEmployees;
 
+  late List<Employee> _employees;
+
   late TextEditingController controller;
+
+  late Map<String, String> catsMap = {};
 
   @override
   void initState() {
     super.initState();
-    filteredEmployees = widget.employees;
+    initEmployees();
+    filteredEmployees = _employees;
     controller = TextEditingController();
+    fillCatsMap();
   }
 
   @override
@@ -41,12 +53,38 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
     controller.dispose();
   }
 
+  void fillCatsMap() {
+    catsMap.clear();
+    for (var e in widget.allCategories) {
+      catsMap[e.id!] = e.name;
+    }
+  }
+
+  String getCatNames(List<String> cats) {
+    String catNames = '';
+    for (var c in cats) {
+      if (catsMap[c] == null) continue;
+      catNames += '${catsMap[c]!}, ';
+    }
+    return catNames.length > 2
+        ? catNames.substring(0, catNames.length - 2)
+        : catNames;
+  }
+
+  void initEmployees() {
+    _employees = [];
+    for (var e in widget.employees) {
+      if (isSubset(getRegsIdsFromRegList(widget.selectedRegulations),
+          getRegsIdsFromCatIds(e.categoryIds, widget.allCategories))) {
+        _employees.add(e);
+      }
+    }
+  }
+
   void deleteString() {
     controller.clear();
-    // controller.text = '';
-
     setState(() {
-      filteredEmployees = widget.employees;
+      filteredEmployees = _employees;
     });
   }
 
@@ -54,7 +92,7 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
     if (value.isEmpty) {
       setState(() {
         isTextFieldEmpty = true;
-        filteredEmployees = widget.employees;
+        filteredEmployees = _employees;
       });
     } else {
       setState(() {
@@ -66,10 +104,10 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
 
   void filterEmployees(String search) {
     setState(() {
-      filteredEmployees = widget.employees
+      filteredEmployees = _employees
           .where(
             (e) =>
-                ('${toSearchString(e.name)} ${toSearchString(e.surname)} ${e.categoryIds.join(' ')}')
+                ('${toSearchString(e.name)} ${toSearchString(e.surname)} ${toSearchString(getCatNames(e.categoryIds))}')
                     .contains(search),
           )
           .toList(); //TODO Разобраться с КАТЕГОРИЯМИИИИИИИИИИИИИИИИИ
@@ -137,6 +175,7 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
                     for (var e in filteredEmployees)
                       EmployeeTile(
                           employee: e,
+                          catNames: getCatNames(e.categoryIds),
                           onTap: () {
                             widget.onSelected(e);
                           })

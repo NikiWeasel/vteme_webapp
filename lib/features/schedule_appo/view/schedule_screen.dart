@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_categories/local_categories_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
@@ -102,128 +103,142 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         : 800;
 
     return LayoutBuilder(builder: (context, constraints) {
-      return BlocBuilder<LocalRegulationsBloc, FetchRegulationsState>(
-        builder: (context, regState) {
-          return BlocBuilder<LocalAppointmentsBloc, LocalAppointmentsState>(
-            builder: (context, appoState) {
-              return BlocBuilder<LocalEmployeesBloc, LocalEmployeesState>(
-                builder: (context, empState) {
-                  return Scaffold(
-                    body: Builder(builder: (context) {
-                      if (regState is LocalRegulationsErrorState ||
-                          empState is LocalEmployeesError ||
-                          appoState is LocalAppointmentsError) {
-                        String errorMsg = '';
+      return BlocBuilder<LocalCategoriesBloc, FetchCategoriesState>(
+        builder: (context, catState) {
+          return BlocBuilder<LocalRegulationsBloc, FetchRegulationsState>(
+            builder: (context, regState) {
+              return BlocBuilder<LocalAppointmentsBloc, LocalAppointmentsState>(
+                builder: (context, appoState) {
+                  return BlocBuilder<LocalEmployeesBloc, LocalEmployeesState>(
+                    builder: (context, empState) {
+                      return Scaffold(
+                        body: Builder(builder: (context) {
+                          if (regState is LocalRegulationsErrorState ||
+                              empState is LocalEmployeesError ||
+                              appoState is LocalAppointmentsError) {
+                            String errorMsg = '';
 
-                        if (regState is LocalRegulationsErrorState) {
-                          errorMsg += '${regState.errorMessage}\n';
-                        }
-                        if (empState is LocalEmployeesError) {
-                          errorMsg += '${empState.errorMessage}\n';
-                        }
-                        if (appoState is LocalAppointmentsError) {
-                          errorMsg += '${appoState.errorMessage}\n';
-                        }
+                            if (regState is LocalRegulationsErrorState) {
+                              errorMsg += '${regState.errorMessage}\n';
+                            }
+                            if (empState is LocalEmployeesError) {
+                              errorMsg += '${empState.errorMessage}\n';
+                            }
+                            if (appoState is LocalAppointmentsError) {
+                              errorMsg += '${appoState.errorMessage}\n';
+                            }
+                            if (catState is LocalCategoriesErrorState) {
+                              errorMsg += '${catState.errorMessage}\n';
+                            }
 
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Произошла ошибка:\n$errorMsg'),
-                            ElevatedButton(
-                                onPressed: reload,
-                                child: const Text('Обновить'))
-                          ],
-                        );
-                      }
-                      if (regState is LocalRegulationsLoadedState &&
-                          empState is LocalEmployeesLoaded &&
-                          appoState is LocalAppointmentsLoaded) {
-                        if (selectedRegs != null && selectedEmployee == null) {
-                          return Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              width: activeWidth,
-                              child: EmployeeSelectionContent(
-                                employees: empState.employees,
-                                onSelected: selectEmployee,
-                                onBackPressed: onBackPressed,
-                              ),
-                            ),
-                          );
-                        }
-
-                        if (selectedEmployee != null && selectedRegs == null) {
-                          return RegSelectionContent(
-                            regs: regState.regulations,
-                            onSelected: selectRegs,
-                            onBackPressed: onBackPressed,
-                          );
-                        }
-
-                        if (selectedRegs != null &&
-                            selectedEmployee != null &&
-                            selectedRegsWithOption == null) {
-                          return TimeSelectionContent(
-                            regs: selectedRegs!,
-                            appos: appoState.appointments,
-                            emp: selectedEmployee!,
-                            selectRegsWithTime: selectRegsWithTime,
-                            onBackPressed: onBackPressed,
-                          );
-                        }
-
-                        if (selectedRegs != null &&
-                            selectedEmployee != null &&
-                            selectedRegsWithOption != null) {
-                          return ContactInfoWidget(
-                            selectedEmployee: selectedEmployee!,
-                            selectedRegs: selectedRegs!,
-                            selectedRegsWithOption: selectedRegsWithOption!,
-                            onBackPressed: onBackPressed,
-                          );
-                        }
-
-                        return Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: activeWidth,
-                            child: Column(
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // mainAxisSize: MainAxisSize.min,
                               children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Text('Новая запись',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface)),
-                                ),
-                                Wrap(
-                                  children: [
-                                    AppoTypeWidget(
-                                        text: 'Выбрать услуги',
-                                        onTap: () {
-                                          // context.pu
-                                        }),
-                                    AppoTypeWidget(
-                                        text: 'Выбрать специалиста',
-                                        onTap: () {}),
-                                  ],
-                                )
+                                Text('Произошла ошибка:\n$errorMsg'),
+                                ElevatedButton(
+                                    onPressed: reload,
+                                    child: const Text('Обновить'))
                               ],
-                            ),
-                          ),
-                        );
-                      }
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (regState is LocalRegulationsLoadedState &&
+                              empState is LocalEmployeesLoaded &&
+                              appoState is LocalAppointmentsLoaded &&
+                              catState is LocalCategoriesLoadedState) {
+                            if (selectedRegs != null &&
+                                selectedEmployee == null) {
+                              return Align(
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  width: activeWidth,
+                                  child: EmployeeSelectionContent(
+                                    employees: empState.employees,
+                                    onSelected: selectEmployee,
+                                    onBackPressed: onBackPressed,
+                                    allCategories: catState.categories,
+                                    selectedRegulations: selectedRegs!,
+                                  ),
+                                ),
+                              );
+                            }
+
+                            if (selectedEmployee != null &&
+                                selectedRegs == null) {
+                              return RegSelectionContent(
+                                regs: regState.regulations,
+                                onSelected: selectRegs,
+                                onBackPressed: onBackPressed,
+                                allCategories: catState.categories,
+                                selectedEmployee: selectedEmployee!,
+                              );
+                            }
+
+                            if (selectedRegs != null &&
+                                selectedEmployee != null &&
+                                selectedRegsWithOption == null) {
+                              return TimeSelectionContent(
+                                regs: selectedRegs!,
+                                appos: appoState.appointments,
+                                emp: selectedEmployee!,
+                                selectRegsWithTime: selectRegsWithTime,
+                                onBackPressed: onBackPressed,
+                              );
+                            }
+
+                            if (selectedRegs != null &&
+                                selectedEmployee != null &&
+                                selectedRegsWithOption != null) {
+                              return ContactInfoWidget(
+                                selectedEmployee: selectedEmployee!,
+                                selectedRegs: selectedRegs!,
+                                selectedRegsWithOption: selectedRegsWithOption!,
+                                onBackPressed: onBackPressed,
+                              );
+                            }
+
+                            return Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: activeWidth,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Text('Новая запись',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface)),
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        AppoTypeWidget(
+                                            text: 'Выбрать услуги',
+                                            onTap: () {
+                                              // context.pu
+                                            }),
+                                        AppoTypeWidget(
+                                            text: 'Выбрать специалиста',
+                                            onTap: () {}),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          return const Align(
+                            alignment: Alignment.center,
+                            child: CircularProgressIndicator(),
+                          );
+                        }),
                       );
-                    }),
+                    },
                   );
                 },
               );

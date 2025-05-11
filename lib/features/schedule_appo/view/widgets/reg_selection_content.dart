@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
+import 'package:vteme_tg_miniapp/core/models/category.dart';
+import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/features/home/view/widgets/regulation_tile.dart';
@@ -10,9 +12,13 @@ class RegSelectionContent extends StatefulWidget {
       {super.key,
       required this.regs,
       required this.onSelected,
-      required this.onBackPressed});
+      required this.onBackPressed,
+      required this.allCategories,
+      required this.selectedEmployee});
 
   final List<Regulation> regs;
+  final Employee selectedEmployee;
+  final List<RegCategory> allCategories;
   final void Function(List<Regulation>) onSelected;
 
   final void Function() onBackPressed;
@@ -27,6 +33,8 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
 
   List<Regulation> selectedRegs = [];
 
+  late List<Regulation> _allRegs;
+
   late TextEditingController controller;
 
   late Map<String, bool> boolMap;
@@ -38,9 +46,10 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
   @override
   void initState() {
     super.initState();
-    filteredRegs = widget.regs;
+    initAllRegs();
+    filteredRegs = _allRegs;
     controller = TextEditingController();
-    boolMap = Map.fromEntries(widget.regs.map(
+    boolMap = Map.fromEntries(_allRegs.map(
       (e) => MapEntry(e.id ?? 'null', false),
     ));
   }
@@ -56,7 +65,7 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     // controller.text = '';
 
     setState(() {
-      filteredRegs = widget.regs;
+      filteredRegs = _allRegs;
     });
   }
 
@@ -64,7 +73,7 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     if (value.isEmpty) {
       setState(() {
         isTextFieldEmpty = true;
-        filteredRegs = widget.regs;
+        filteredRegs = _allRegs;
       });
     } else {
       setState(() {
@@ -76,7 +85,7 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
 
   void filterRegs(String search) {
     setState(() {
-      filteredRegs = widget.regs
+      filteredRegs = _allRegs
           .where(
             (e) => ('${toSearchString(e.name)} ${e.cost} ${e.duration}')
                 .contains(search),
@@ -110,7 +119,7 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
         .map((entry) => entry.key)
         .toList();
     selectedRegs =
-        widget.regs.where((element) => trueKeys.contains(element.id)).toList();
+        _allRegs.where((element) => trueKeys.contains(element.id)).toList();
 
     print(selectedRegs);
   }
@@ -136,6 +145,22 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
 
   void reload() {
     context.read<LocalRegulationsBloc>().add(FetchRegulationsData());
+  }
+
+  void initAllRegs() {
+    _allRegs = [];
+    for (var e in widget.regs) {
+      print('getRegsIdsFromRegList(widget.regs)');
+      print(getRegsIdsFromRegList(widget.regs));
+      print(getRegsIdsFromCatIds(
+          widget.selectedEmployee.categoryIds, widget.allCategories));
+      if (isSubset(
+          getRegsIdsFromRegList([e]),
+          getRegsIdsFromCatIds(
+              widget.selectedEmployee.categoryIds, widget.allCategories))) {
+        _allRegs.add(e);
+      }
+    }
   }
 
   @override

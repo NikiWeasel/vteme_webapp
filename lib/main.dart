@@ -10,12 +10,14 @@ import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:vteme_tg_miniapp/core/app_router.dart';
 import 'package:vteme_tg_miniapp/core/bloc/actions_appointments/actions_appointment_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_categories/local_categories_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_portfolio_photos/local_portfolio_photos_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_regulations/local_regulations_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/selected_regulation_option.dart';
 import 'package:vteme_tg_miniapp/core/repository/actions_appointment_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/local_appointments_repository.dart';
+import 'package:vteme_tg_miniapp/core/repository/local_categories_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/local_employees_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/local_portfolio_photos_repository.dart';
 import 'package:vteme_tg_miniapp/core/repository/local_regulations_repository.dart';
@@ -84,6 +86,11 @@ void main() async {
     firebaseFirestore: firebaseFirestore,
   );
 
+  final LocalCategoriesRepository localCategoriesRepository =
+      LocalCategoriesRepository(
+    firebaseFirestore: firebaseFirestore,
+  );
+
   final LocalPortfolioPhotosRepository fetchDataRepository =
       LocalPortfolioPhotosRepository(firebaseStorage: firebaseStorage);
 
@@ -106,6 +113,10 @@ void main() async {
       BlocProvider<LocalEmployeesBloc>(
         create: (context) => LocalEmployeesBloc(localEmployeesRepository)
           ..add(FetchAllEmployeesData()),
+      ),
+      BlocProvider<LocalCategoriesBloc>(
+        create: (context) => LocalCategoriesBloc(localCategoriesRepository)
+          ..add(FetchCategoriesData()),
       ),
       BlocProvider<LocalAppointmentsBloc>(
         create: (context) => LocalAppointmentsBloc(localAppointmentsRepository)

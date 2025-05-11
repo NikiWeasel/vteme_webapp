@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:translit/translit.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
+import 'package:vteme_tg_miniapp/core/models/category.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/models/time_slot_option.dart';
 
@@ -98,4 +99,29 @@ String toSearchString(String source) {
 
 String unTranslit(String source) {
   return Translit().unTranslit(source: source);
+}
+
+bool isSubset<T>(List<T> small, List<T> big) {
+  return small.toSet().difference(big.toSet()).isEmpty;
+}
+
+List<String> getRegsIdsFromRegList(List<Regulation> regs) {
+  List<String> ids = [];
+  for (var r in regs) {
+    ids.add(r.id!);
+  }
+  return ids;
+}
+
+List<String> getRegsIdsFromCatIds(
+    List<String> catIds, List<RegCategory> allCats) {
+  List<String> regIds = [];
+  for (var c in catIds) {
+    for (var r in allCats) {
+      if (c == r.id) {
+        regIds.addAll(r.regulationIds);
+      }
+    }
+  }
+  return regIds;
 }
