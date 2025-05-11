@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:vteme_tg_miniapp/features/agreement/view/agreement_screen.dart';
 import 'package:vteme_tg_miniapp/features/home/view/home_screen.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/schedule_screen.dart';
 
@@ -11,6 +12,13 @@ get router {
           builder: (context, state) {
             return const HomeScreen();
           },
+          routes: [
+            // Вложенный маршрут agreement
+            GoRoute(
+              path: '/user-agreement',
+              builder: (context, state) => const AgreementScreen(),
+            ),
+          ],
         ),
         //TODO: Лучше передавать параметры в формате JSON строки url-safe Base64, а не как extra
         GoRoute(

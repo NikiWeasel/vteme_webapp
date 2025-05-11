@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +49,8 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
   String enteredSurname = '';
   String enteredNumber = '';
 
+  bool isAgreed = false;
+
   late TextEditingController nameController;
   late TextEditingController surnameController;
   late TextEditingController numberController;
@@ -77,6 +80,13 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
   void setLoadingBool(bool value) {
     setState(() {
       isLoading = value;
+    });
+  }
+
+  void changeAgreementSelection(bool? value) {
+    if (value == null) return;
+    setState(() {
+      isAgreed = value;
     });
   }
 
@@ -302,6 +312,85 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                       const SizedBox(
                         height: 8,
                       ),
+                      FormField<bool>(
+                        initialValue: false,
+                        validator: (value) {
+                          if (value != true) return 'Вы должны согласиться';
+                          return null;
+                        },
+                        builder: (FormFieldState<bool> state) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CheckboxListTile.adaptive(
+                                title: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface),
+                                          text:
+                                              'Согласен на обработку персональных данных. '),
+                                      TextSpan(
+                                        text: 'Подробнее',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            context
+                                                .push('/home/user-agreement');
+                                          },
+                                      ),
+                                      TextSpan(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface),
+                                          text: '*'),
+                                    ],
+                                  ),
+                                ),
+                                value: state.value,
+                                onChanged: (val) {
+                                  state.didChange(val);
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                              if (state.hasError)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Text(
+                                    state.errorText!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
@@ -324,7 +413,7 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                                     child: const CircularProgressIndicator())
                                 : const Icon(Icons.send),
                             label: const Text('Записаться')),
-                      )
+                      ),
                     ],
                   ),
                 ),

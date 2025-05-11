@@ -55,30 +55,28 @@ class EmployeeDetails extends StatelessWidget {
                   ),
                   if (employee.description != '')
                     SizedBox(
-                      height: 250,
+                      height: 100,
                       child: Card(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: employee.description == ''
-                                ? const Padding(
-                                    padding: EdgeInsets.only(top: 100),
-                                    child: Center(child: Text('Нет описания')),
-                                  )
-                                : Text(
-                                    employee.description,
-                                    // maxLines: false,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge!
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface),
-                                    overflow: TextOverflow.fade,
-                                    softWrap: true,
-                                  ),
-                          ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: employee.description == ''
+                              ? const Padding(
+                                  padding: EdgeInsets.only(top: 100),
+                                  child: Center(child: Text('Нет описания')),
+                                )
+                              : Text(
+                                  employee.description,
+                                  // maxLines: false,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface),
+                                  overflow: TextOverflow.fade,
+                                  softWrap: true,
+                                ),
                         ),
                       ),
                     ),
