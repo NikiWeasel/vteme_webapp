@@ -25,7 +25,7 @@ class EmployeeTile extends StatelessWidget {
         leading: CircleAvatar(
             foregroundImage: NetworkImage(employee.imageUrl),
             child: const Icon(Icons.person)),
-        title: Text(employee.name),
+        title: Text('${employee.name} ${employee.surname}'),
         subtitle: Text(employee.categoryIds.join(', ')),
         onTap: onTap,
       ),

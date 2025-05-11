@@ -343,83 +343,87 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
             ),
           ),
         ),
-        body: Align(
-          alignment: Alignment.center,
-          child: SizedBox(
-            width: activeWidth,
-            child: Column(
-              children: [
-                if (widget.regs.length > 1)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ToggleButtons(
-                      direction: Axis.horizontal,
-                      onPressed: (int index) {
-                        setState(() {
-                          for (int i = 0;
-                              i < _selectedTimeSelectionMode.length;
-                              i++) {
-                            _selectedTimeSelectionMode[i] = i == index;
-                          }
-                        });
-                      },
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      constraints:
-                          const BoxConstraints(minHeight: 40.0, minWidth: 80.0),
-                      isSelected: _selectedTimeSelectionMode,
-                      children: shedMode,
-                    ),
-                  ),
-                if (_selectedTimeSelectionMode[0]) // Объединенное расписание
-                  Card(
-                    child: Padding(
+        body: SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: activeWidth,
+              child: Column(
+                children: [
+                  if (widget.regs.length > 1)
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          for (var reg in widget.regs) ...[
-                            EmployeeRegWidget(emp: widget.emp, reg: reg),
-                            const SeparationWidget(),
-                          ],
-                          const SizedBox(height: 8),
-                          AvailableTimeSelection(
-                            combinedRegulationsWithTimeOptions: combinedBlock,
-                            regulationWithTimeOptions: null,
-                            addWeek: addWeek,
-                            selectSeparatedTime: null,
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                      child: ToggleButtons(
+                        direction: Axis.horizontal,
+                        onPressed: (int index) {
+                          setState(() {
+                            for (int i = 0;
+                                i < _selectedTimeSelectionMode.length;
+                                i++) {
+                              _selectedTimeSelectionMode[i] = i == index;
+                            }
+                          });
+                        },
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        constraints: const BoxConstraints(
+                            minHeight: 40.0, minWidth: 80.0),
+                        isSelected: _selectedTimeSelectionMode,
+                        children: shedMode,
                       ),
                     ),
-                  )
-                else // Раздельное расписание
-                  Column(
-                    children: [
-                      for (int i = 0; i < separateBlocks.length; i++)
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                EmployeeRegWidget(
-                                    emp: widget.emp,
-                                    reg: separateBlocks[i].regulation),
-                                const SeparationWidget(),
-                                AvailableTimeSelection(
-                                  combinedRegulationsWithTimeOptions: null,
-                                  regulationWithTimeOptions: separateBlocks[i],
-                                  addWeek: addWeek,
-                                  selectSeparatedTime: () {
-                                    selectSeparatedTime(i, separateBlocks[i]);
-                                  },
-                                )
-                              ],
+                  if (_selectedTimeSelectionMode[0]) // Объединенное расписание
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            for (var reg in widget.regs) ...[
+                              EmployeeRegWidget(emp: widget.emp, reg: reg),
+                              const SeparationWidget(),
+                            ],
+                            const SizedBox(height: 8),
+                            AvailableTimeSelection(
+                              combinedRegulationsWithTimeOptions: combinedBlock,
+                              regulationWithTimeOptions: null,
+                              addWeek: addWeek,
+                              selectSeparatedTime: null,
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      ),
+                    )
+                  else // Раздельное расписание
+                    Column(
+                      children: [
+                        for (int i = 0; i < separateBlocks.length; i++)
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  EmployeeRegWidget(
+                                      emp: widget.emp,
+                                      reg: separateBlocks[i].regulation),
+                                  const SeparationWidget(),
+                                  AvailableTimeSelection(
+                                    combinedRegulationsWithTimeOptions: null,
+                                    regulationWithTimeOptions:
+                                        separateBlocks[i],
+                                    addWeek: addWeek,
+                                    selectSeparatedTime: () {
+                                      selectSeparatedTime(i, separateBlocks[i]);
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                    ],
-                  ),
-              ],
+                      ],
+                    ),
+                ],
+              ),
             ),
           ),
         ),

@@ -214,117 +214,119 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
         ),
         body: Form(
           key: _formKey,
-          child: Align(
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: activeWidth,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                  // mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Имя',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+          child: SingleChildScrollView(
+            child: Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: activeWidth,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        height: 8,
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Пустое поле';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        enteredName = value!;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                      controller: surnameController,
-                      decoration: InputDecoration(
-                        labelText: 'Фамилия',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                      TextFormField(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Имя',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Пустое поле';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          enteredName = value!;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Пустое поле';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        enteredSurname = value!;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                      controller: numberController,
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [phoneMaskFormatter],
-                      decoration: InputDecoration(
-                        labelText: 'Телефон',
-                        hintText: '+7 (___) ___-__-__',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                        controller: surnameController,
+                        decoration: InputDecoration(
+                          labelText: 'Фамилия',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Пустое поле';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          enteredSurname = value!;
+                        },
                       ),
-                      validator: (value) {
-                        // Проверка, что строка полностью введена (все цифры на месте)
-                        if (value == null || value.isEmpty) {
-                          return 'Пустое поле';
-                        } else if (!phoneMaskFormatter.isFill()) {
-                          return 'Введите полный номер';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        enteredNumber = value!;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                          onPressed: !isLoading
-                              ? () {
-                                  if (validateAndSave()) {
-                                    createAppos();
-                                    addAllAppos(apposToSend, (appo) {
-                                      context
-                                          .read<ActionsAppointmentBloc>()
-                                          .add(CreateAppointmentEvent(
-                                              appointment: appo));
-                                    });
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                        controller: numberController,
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [phoneMaskFormatter],
+                        decoration: InputDecoration(
+                          labelText: 'Телефон',
+                          hintText: '+7 (___) ___-__-__',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        validator: (value) {
+                          // Проверка, что строка полностью введена (все цифры на месте)
+                          if (value == null || value.isEmpty) {
+                            return 'Пустое поле';
+                          } else if (!phoneMaskFormatter.isFill()) {
+                            return 'Введите полный номер';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          enteredNumber = value!;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                            onPressed: !isLoading
+                                ? () {
+                                    if (validateAndSave()) {
+                                      createAppos();
+                                      addAllAppos(apposToSend, (appo) {
+                                        context
+                                            .read<ActionsAppointmentBloc>()
+                                            .add(CreateAppointmentEvent(
+                                                appointment: appo));
+                                      });
+                                    }
                                   }
-                                }
-                              : null,
-                          icon: isLoading
-                              ? Transform.scale(
-                                  scale: 0.5,
-                                  child: const CircularProgressIndicator())
-                              : const Icon(Icons.send),
-                          label: const Text('Записаться')),
-                    )
-                  ],
+                                : null,
+                            icon: isLoading
+                                ? Transform.scale(
+                                    scale: 0.5,
+                                    child: const CircularProgressIndicator())
+                                : const Icon(Icons.send),
+                            label: const Text('Записаться')),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

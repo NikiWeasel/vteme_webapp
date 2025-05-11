@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:translit/translit.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
 import 'package:vteme_tg_miniapp/core/models/time_slot_option.dart';
@@ -89,4 +90,12 @@ DateTime getDate(List<List<TimeSlotOption>> timeSlotsByDate) {
   }
   date = timeList.single.time;
   return date;
+}
+
+String toSearchString(String source) {
+  return unTranslit(source.toLowerCase());
+}
+
+String unTranslit(String source) {
+  return Translit().unTranslit(source: source);
 }

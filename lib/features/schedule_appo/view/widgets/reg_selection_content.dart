@@ -69,16 +69,17 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     } else {
       setState(() {
         isTextFieldEmpty = false;
-        filterRegs(value);
+        filterRegs(toSearchString(value));
       });
     }
   }
 
   void filterRegs(String search) {
     setState(() {
-      filteredRegs = filteredRegs
+      filteredRegs = widget.regs
           .where(
-            (e) => ('${e.name} ${e.cost} ${e.duration}').contains(search),
+            (e) => ('${toSearchString(e.name)} ${e.cost} ${e.duration}')
+                .contains(search),
           )
           .toList();
     });

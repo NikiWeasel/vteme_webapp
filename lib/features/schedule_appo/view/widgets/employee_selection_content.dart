@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vteme_tg_miniapp/core/bloc/fetch_employees/local_employees_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
+import 'package:vteme_tg_miniapp/core/utils/functions.dart';
 import 'package:vteme_tg_miniapp/features/schedule_appo/view/widgets/employee_tile.dart';
 
 class EmployeeSelectionContent extends StatefulWidget {
@@ -58,17 +59,18 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
     } else {
       setState(() {
         isTextFieldEmpty = false;
-        filterEmployees(value);
+        filterEmployees(toSearchString(value));
       });
     }
   }
 
   void filterEmployees(String search) {
     setState(() {
-      filteredEmployees = filteredEmployees
+      filteredEmployees = widget.employees
           .where(
-            (e) => ('${e.name} ${e.surname} ${e.categoryIds.join(' ')}')
-                .contains(search),
+            (e) =>
+                ('${toSearchString(e.name)} ${toSearchString(e.surname)} ${e.categoryIds.join(' ')}')
+                    .contains(search),
           )
           .toList(); //TODO Разобраться с КАТЕГОРИЯМИИИИИИИИИИИИИИИИИ
     });
@@ -125,18 +127,21 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
                   )),
             ),
           ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  for (var e in filteredEmployees)
-                    EmployeeTile(
-                        employee: e,
-                        onTap: () {
-                          widget.onSelected(e);
-                        })
-                ],
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var e in filteredEmployees)
+                      EmployeeTile(
+                          employee: e,
+                          onTap: () {
+                            widget.onSelected(e);
+                          })
+                  ],
+                ),
               ),
             ),
           )
