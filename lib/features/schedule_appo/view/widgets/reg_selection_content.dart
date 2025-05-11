@@ -121,11 +121,11 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     selectedRegs =
         _allRegs.where((element) => trueKeys.contains(element.id)).toList();
 
-    print(selectedRegs);
+    // print(selectedRegs);
   }
 
   void onContinueButton() {
-    print(selectedRegs);
+    // print(selectedRegs);
     if (selectedRegs.isEmpty) return;
 
     widget.onSelected(selectedRegs);
@@ -150,10 +150,6 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
   void initAllRegs() {
     _allRegs = [];
     for (var e in widget.regs) {
-      print('getRegsIdsFromRegList(widget.regs)');
-      print(getRegsIdsFromRegList(widget.regs));
-      print(getRegsIdsFromCatIds(
-          widget.selectedEmployee.categoryIds, widget.allCategories));
       if (isSubset(
           getRegsIdsFromRegList([e]),
           getRegsIdsFromCatIds(
@@ -168,8 +164,6 @@ class _RegSelectionContentState extends State<RegSelectionContent> {
     double activeWidth = MediaQuery.of(context).size.width <= 800
         ? MediaQuery.of(context).size.width
         : 800;
-
-    //TODO Возможно стоит сделать время сессии записи
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(

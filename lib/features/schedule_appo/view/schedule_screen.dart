@@ -37,6 +37,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   List<AppointmentStep> appoSteps = [];
 
+  bool didCheckDifferentAppos = false;
+
   @override
   void initState() {
     super.initState();
@@ -148,6 +150,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               catState is LocalCategoriesLoadedState) {
                             if (selectedRegs != null &&
                                 selectedEmployee == null) {
+                              didCheckDifferentAppos = false;
                               return Align(
                                 alignment: Alignment.center,
                                 child: SizedBox(
@@ -165,6 +168,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                             if (selectedEmployee != null &&
                                 selectedRegs == null) {
+                              didCheckDifferentAppos = false;
                               return RegSelectionContent(
                                 regs: regState.regulations,
                                 onSelected: selectRegs,
@@ -177,6 +181,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             if (selectedRegs != null &&
                                 selectedEmployee != null &&
                                 selectedRegsWithOption == null) {
+                              didCheckDifferentAppos = false;
                               return TimeSelectionContent(
                                 regs: selectedRegs!,
                                 appos: appoState.appointments,
@@ -189,11 +194,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             if (selectedRegs != null &&
                                 selectedEmployee != null &&
                                 selectedRegsWithOption != null) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (!didCheckDifferentAppos) {
+                                  context
+                                      .read<LocalAppointmentsBloc>()
+                                      .add(FetchAppointmentsData());
+                                  didCheckDifferentAppos = true;
+                                }
+                              });
                               return ContactInfoWidget(
                                 selectedEmployee: selectedEmployee!,
                                 selectedRegs: selectedRegs!,
                                 selectedRegsWithOption: selectedRegsWithOption!,
                                 onBackPressed: onBackPressed,
+                                allAppos: appoState.appointments,
                               );
                             }
 

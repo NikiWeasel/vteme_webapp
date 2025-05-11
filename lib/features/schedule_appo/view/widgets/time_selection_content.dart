@@ -79,8 +79,8 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
             ))
         .toList();
 
-    print('separateBlocks.length');
-    print(separateBlocks.length);
+    // print('separateBlocks.length');
+    // print(separateBlocks.length);
 
     countFinalVars();
 
@@ -101,7 +101,7 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     //     is CombinedRegulationsWithTimeOptions) {}
     selectedRegulationOption = selectedRegulationWithTimeOptions.value;
 
-    print('NOTIFIER');
+    // print('NOTIFIER');
   }
 
   void onContinueButton() {
@@ -129,10 +129,6 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
           datesSelected++;
         }
       }
-
-      // print('timeSlotsByDate.length');
-      // print(widget.regs.length);
-      // print(datesSelected);
       return (1 == datesSelected);
     }
 
@@ -140,8 +136,6 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
       final separatedRegsList = selectedRegulationOption.separated;
 
       int selectedCount = 0;
-
-      print(separatedRegsList);
 
       for (var e in separatedRegsList) {
         final hasSelection = e.timeSlotsByDate.any(
@@ -151,9 +145,6 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
           selectedCount++;
         }
       }
-      print('widget.regs.length');
-      print(widget.regs.length);
-      print(selectedCount);
       return widget.regs.length == selectedCount;
     }
 

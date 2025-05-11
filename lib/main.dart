@@ -62,7 +62,7 @@ void main() async {
           const Duration(seconds: 1), TelegramWebApp.instance.expand);
     }
   } catch (e) {
-    print("Error happened in Flutter while loading Telegram $e");
+    // print("Error happened in Flutter while loading Telegram $e");
     // add delay for 'Telegram seldom not loading' bug
     await Future.delayed(const Duration(milliseconds: 200));
     main();
@@ -76,10 +76,6 @@ void main() async {
 
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
-  // final LocalPortfolioPhotosRepository fetchDataRepository =
-  //     LocalPortfolioPhotosRepository(
-  //         firebaseAuth: firebaseAuth, firebaseStorage: firebaseStorage);
 
   final LocalEmployeesRepository localEmployeesRepository =
       LocalEmployeesRepository(

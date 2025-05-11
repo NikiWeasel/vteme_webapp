@@ -125,3 +125,22 @@ List<String> getRegsIdsFromCatIds(
   }
   return regIds;
 }
+
+bool isOverlapping(Appointment newAppointment, List<Appointment> appointments) {
+  var newStart = (newAppointment.date.hour * 60) + newAppointment.date.minute;
+  var newEnd = newStart + newAppointment.duration;
+
+  for (var appo in appointments) {
+    var start = (appo.date.hour * 60) + appo.date.minute;
+    var end = start + appo.duration;
+
+    // Проверка на пересечение
+    if ((newStart < end && newEnd > start) ||
+        (newStart == start && newEnd == end)) {
+      if (appo.appointmentId != newAppointment.appointmentId) {
+        return true; // Пересечение найдено
+      }
+    }
+  }
+  return false; // Нет пересечений
+}

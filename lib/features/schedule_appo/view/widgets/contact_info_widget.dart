@@ -20,9 +20,11 @@ class ContactInfoWidget extends StatefulWidget {
       required this.selectedEmployee,
       required this.selectedRegs,
       required this.selectedRegsWithOption,
-      required this.onBackPressed});
+      required this.onBackPressed,
+      required this.allAppos});
 
   final Employee selectedEmployee;
+  final List<Appointment> allAppos;
   final List<Regulation> selectedRegs;
   final SelectedRegulationOption selectedRegsWithOption;
 
@@ -198,6 +200,15 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
         ));
       }
     }
+  }
+
+  bool doApposOverlap() {
+    for (var a in apposToSend) {
+      if (isOverlapping(a, widget.allAppos)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   bool validateAndSave() {
@@ -398,6 +409,13 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                                 ? () {
                                     if (validateAndSave()) {
                                       createAppos();
+                                      if (doApposOverlap()) {
+                                        showSnackBar(
+                                            context: context,
+                                            text:
+                                                'На данное время уже появилась запись, попробуйте снова');
+                                        return;
+                                      }
                                       addAllAppos(apposToSend, (appo) {
                                         context
                                             .read<ActionsAppointmentBloc>()

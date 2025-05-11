@@ -110,7 +110,7 @@ class _EmployeeSelectionContentState extends State<EmployeeSelectionContent> {
                 ('${toSearchString(e.name)} ${toSearchString(e.surname)} ${toSearchString(getCatNames(e.categoryIds))}')
                     .contains(search),
           )
-          .toList(); //TODO Разобраться с КАТЕГОРИЯМИИИИИИИИИИИИИИИИИ
+          .toList();
     });
   }
 
