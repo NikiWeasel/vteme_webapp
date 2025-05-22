@@ -62,20 +62,26 @@ class EmployeeDetails extends StatelessWidget {
                           child: employee.description == ''
                               ? const Padding(
                                   padding: EdgeInsets.only(top: 100),
-                                  child: Center(child: Text('Нет описания')),
+                                  child: SizedBox(
+                                      width: double.infinity,
+                                      child:
+                                          Center(child: Text('Нет описания'))),
                                 )
-                              : Text(
-                                  employee.description,
-                                  // maxLines: false,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface),
-                                  overflow: TextOverflow.fade,
-                                  softWrap: true,
+                              : SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    employee.description,
+                                    // maxLines: false,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: true,
+                                  ),
                                 ),
                         ),
                       ),

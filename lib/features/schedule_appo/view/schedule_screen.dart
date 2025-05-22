@@ -38,6 +38,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   List<AppointmentStep> appoSteps = [];
 
   bool didCheckDifferentAppos = false;
+  bool didRenew = false;
 
   @override
   void initState() {
@@ -144,9 +145,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               ],
                             );
                           }
+                          if (!didRenew) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              context
+                                  .read<LocalAppointmentsBloc>()
+                                  .add(FetchAppointmentsData());
+                            });
+                            didRenew = true;
+                          }
                           if (regState is LocalRegulationsLoadedState &&
                               empState is LocalEmployeesLoaded &&
-                              appoState is LocalAppointmentsLoaded &&
+                              (appoState is LocalAppointmentsLoaded ||
+                                  didCheckDifferentAppos) &&
                               catState is LocalCategoriesLoadedState) {
                             if (selectedRegs != null &&
                                 selectedEmployee == null) {
@@ -184,7 +194,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               didCheckDifferentAppos = false;
                               return TimeSelectionContent(
                                 regs: selectedRegs!,
-                                appos: appoState.appointments,
+                                appos: (appoState as LocalAppointmentsLoaded)
+                                    .appointments,
                                 emp: selectedEmployee!,
                                 selectRegsWithTime: selectRegsWithTime,
                                 onBackPressed: onBackPressed,
@@ -194,23 +205,21 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             if (selectedRegs != null &&
                                 selectedEmployee != null &&
                                 selectedRegsWithOption != null) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (!didCheckDifferentAppos) {
-                                  context
-                                      .read<LocalAppointmentsBloc>()
-                                      .add(FetchAppointmentsData());
-                                  didCheckDifferentAppos = true;
-                                }
-                              });
+                              didCheckDifferentAppos = true;
                               return ContactInfoWidget(
                                 selectedEmployee: selectedEmployee!,
                                 selectedRegs: selectedRegs!,
                                 selectedRegsWithOption: selectedRegsWithOption!,
                                 onBackPressed: onBackPressed,
-                                allAppos: appoState.appointments,
+                                allApposState: appoState,
                               );
                             }
 
+                            if (selectedRegs == null &&
+                                selectedEmployee == null &&
+                                selectedRegsWithOption == null) {
+                              context.go('/home');
+                            }
                             return Align(
                               alignment: Alignment.center,
                               child: SizedBox(

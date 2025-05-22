@@ -103,38 +103,69 @@ class _PhotoSliderState extends State<PhotoSlider> {
                   ),
                 ),
         ),
-        Positioned(
-          bottom: 5,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.photoUrls.asMap().entries.map((entry) {
-              return GestureDetector(
-                onTap: () {
-                  _controller.animateToPage(entry.key);
-                },
-                child: Container(
-                  width: 12.0,
-                  height: 12.0,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 4.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white
-                        .withValues(alpha: _current == entry.key ? 0.9 : 0.4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+        if (widget.photoUrls.asMap().length > 6)
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              width: 40.0,
+              height: 22.0,
+              margin: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                // shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white.withValues(alpha: 0.9),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
                   ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Center(
+                  child: Text(
+                      '${_current + 1}/${widget.photoUrls.asMap().length + 1}'),
                 ),
-              );
-            }).toList(),
+              ),
+            ),
+          )
+        else
+          Positioned(
+            bottom: 5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: widget.photoUrls.asMap().entries.map((entry) {
+                return GestureDetector(
+                  onTap: () {
+                    _controller.animateToPage(entry.key);
+                  },
+                  child: Container(
+                    width: 12.0,
+                    height: 12.0,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white
+                          .withValues(alpha: _current == entry.key ? 0.9 : 0.4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
-        ),
       ],
     );
   }
