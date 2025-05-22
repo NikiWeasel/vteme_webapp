@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:telegram_web_app/telegram_web_app.dart';
 import 'package:vteme_tg_miniapp/core/bloc/actions_appointments/actions_appointment_bloc.dart';
+import 'package:vteme_tg_miniapp/core/bloc/fetch_appointments/local_appointments_bloc.dart';
 import 'package:vteme_tg_miniapp/core/models/appointment.dart';
 import 'package:vteme_tg_miniapp/core/models/employee.dart';
 import 'package:vteme_tg_miniapp/core/models/regulation.dart';
@@ -21,10 +22,10 @@ class ContactInfoWidget extends StatefulWidget {
       required this.selectedRegs,
       required this.selectedRegsWithOption,
       required this.onBackPressed,
-      required this.allAppos});
+      required this.allApposState});
 
   final Employee selectedEmployee;
-  final List<Appointment> allAppos;
+  final LocalAppointmentsState allApposState;
   final List<Regulation> selectedRegs;
   final SelectedRegulationOption selectedRegsWithOption;
 
@@ -40,6 +41,7 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
+  late List<Appointment> allAppos;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -60,6 +62,11 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
   @override
   void initState() {
     super.initState();
+    var state = widget.allApposState;
+    if (state is LocalAppointmentsLoaded) {
+      allAppos = state.appointments;
+    }
+    // allAppos =
     nameController = TextEditingController();
     surnameController = TextEditingController();
     numberController = TextEditingController();
@@ -166,6 +173,43 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
     }
   }
 
+  Future<void> fetchAndWait(BuildContext context) async {
+    final bloc = context.read<LocalAppointmentsBloc>();
+    final completer = Completer<bool>();
+    List<Appointment> appos = [];
+    String error = '';
+
+    late final StreamSubscription subscription;
+    subscription = bloc.stream.listen((state) {
+      if (state is LocalAppointmentsLoaded) {
+        appos = state.appointments;
+        completer.complete(true); // Успех
+      } else if (state is LocalAppointmentsError) {
+        error = state.errorMessage;
+        completer.complete(false); // Ошибка
+      }
+      // Можно добавить другие состояния по необходимости
+    });
+
+    bloc.add(FetchAppointmentsData());
+
+    final success = await completer.future;
+    await subscription.cancel();
+
+    if (success) {
+      // Успешно загружено
+      // yourFunction();
+      allAppos = appos;
+      // print(appos);
+      // print('FETCHED');
+    } else {
+      // Обработка ошибки или fallback
+      // handleError();
+      showSnackBar(context: context, text: 'Произошла ошибка: $error');
+      // print('ERROR FETCHING');
+    }
+  }
+
   void createAppos() {
     var selectedRegsWithOption = widget.selectedRegsWithOption;
 
@@ -204,7 +248,7 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
 
   bool doApposOverlap() {
     for (var a in apposToSend) {
-      if (isOverlapping(a, widget.allAppos)) {
+      if (isOverlapping(a, allAppos)) {
         return true;
       }
     }
@@ -405,24 +449,36 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                            onPressed: !isLoading
-                                ? () {
-                                    if (validateAndSave()) {
-                                      createAppos();
-                                      if (doApposOverlap()) {
-                                        showSnackBar(
-                                            context: context,
-                                            text:
-                                                'На данное время уже появилась запись, попробуйте снова');
-                                        return;
-                                      }
-                                      addAllAppos(apposToSend, (appo) {
-                                        context
-                                            .read<ActionsAppointmentBloc>()
-                                            .add(CreateAppointmentEvent(
-                                                appointment: appo));
-                                      });
-                                    }
+                            onPressed: !isLoading ||
+                                    widget.allApposState
+                                        is! LocalAppointmentsLoading
+                                ? () async {
+                                    // context
+                                    //     .read<LocalAppointmentsBloc>()
+                                    //     .add(FetchAppointmentsData());
+
+                                    await fetchAndWait(context).then(
+                                      (value) {
+                                        if (validateAndSave()) {
+                                          print('after');
+                                          createAppos();
+
+                                          if (doApposOverlap()) {
+                                            showSnackBar(
+                                                context: context,
+                                                text:
+                                                    'На данное время уже появилась запись, попробуйте снова');
+                                            return;
+                                          }
+                                          addAllAppos(apposToSend, (appo) {
+                                            context
+                                                .read<ActionsAppointmentBloc>()
+                                                .add(CreateAppointmentEvent(
+                                                    appointment: appo));
+                                          });
+                                        }
+                                      },
+                                    );
                                   }
                                 : null,
                             icon: isLoading

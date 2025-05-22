@@ -36,7 +36,7 @@ class RegulationTile extends StatelessWidget {
         ),
         onTap: isSecondaryScreen ? onPressed : null,
         title: Text(regulation.name),
-        subtitle: Text('${regulation.duration.toString()} мин'),
+        subtitle: Text(regulation.getFormattedDuration()),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
