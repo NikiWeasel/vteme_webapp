@@ -92,8 +92,8 @@ void main() async {
 
   final LocalAppointmentsRepository localAppointmentsRepository =
       LocalAppointmentsRepository(
-          firebaseFirestore: firebaseFirestore,
-          firebaseStorage: firebaseStorage);
+    firebaseFirestore: firebaseFirestore,
+  );
 
   final LocalRegulationsRepository localRegulationsRepository =
       LocalRegulationsRepository(
@@ -116,7 +116,7 @@ void main() async {
       ),
       BlocProvider<LocalAppointmentsBloc>(
         create: (context) => LocalAppointmentsBloc(localAppointmentsRepository)
-          ..add(FetchAppointmentsData()),
+          ..add(SubscribeToAppointments()),
       ),
       BlocProvider<LocalRegulationsBloc>(
         create: (context) => LocalRegulationsBloc(localRegulationsRepository)
