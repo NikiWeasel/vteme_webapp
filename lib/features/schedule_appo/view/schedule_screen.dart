@@ -38,7 +38,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   List<AppointmentStep> appoSteps = [];
 
   bool didCheckDifferentAppos = false;
-  bool didRenew = false;
 
   @override
   void initState() {
@@ -144,14 +143,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                     child: const Text('Обновить'))
                               ],
                             );
-                          }
-                          if (!didRenew) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              context
-                                  .read<LocalAppointmentsBloc>()
-                                  .add(FetchAppointmentsData());
-                            });
-                            didRenew = true;
                           }
                           if (regState is LocalRegulationsLoadedState &&
                               empState is LocalEmployeesLoaded &&

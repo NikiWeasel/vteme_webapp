@@ -55,12 +55,13 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
   int finalDuration = 0;
 
   SelectedRegulationOption? selectedRegulationOption;
-  List<Appointment> allAppos = [];
+
+  // List<Appointment> allAppos = [];
 
   @override
   void initState() {
     super.initState();
-    allAppos = widget.appos;
+    // allAppos = widget.appos;
 
     datesList =
         List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
@@ -68,14 +69,22 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     combinedBlock = CombinedRegulationsWithTimeOptions(
       regulations: widget.regs,
       dates: List.from(datesList),
-      allAppointments: allAppos,
+      allAppointments: widget.appos
+          .where(
+            (element) => element.masterId == widget.emp.employeeId,
+          )
+          .toList(),
     );
 
     separateBlocks = widget.regs
         .map((reg) => RegulationWithTimeOptions(
               regulation: reg,
               dates: List.from(datesList),
-              allAppointments: allAppos,
+              allAppointments: widget.appos
+                  .where(
+                    (element) => element.masterId == widget.emp.employeeId,
+                  )
+                  .toList(),
             ))
         .toList();
 
@@ -160,7 +169,6 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     }
 
     if (value is SelectedSeparated) {
-      // Убедимся, что список нужной длины
       while (value.separated.length < widget.regs.length) {
         value.separated.add(
           RegulationWithTimeOptions(
@@ -171,7 +179,6 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
         );
       }
 
-      // Обновляем текущий блок
       value.separated[index] = selectedBlock;
 
       // Если пользователь выбрал дату/время
@@ -196,56 +203,6 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
       }
     }
   }
-
-  // void selectSeparatedTime(
-  //     int index, RegulationWithTimeOptions regulationWithTimeOptions) {
-  //   var value = selectedRegulationWithTimeOptions.value;
-  //   if (value == null) {
-  //     selectedRegulationWithTimeOptions.value = SelectedSeparated([]);
-  //     value = selectedRegulationWithTimeOptions.value;
-  //   }
-  //   if (value is SelectedSeparated) {
-  //     while (value.separated.length < widget.regs.length) {
-  //       value.separated.add(
-  //         RegulationWithTimeOptions(
-  //           regulation: widget.regs[0],
-  //           dates: [],
-  //           allAppointments: [],
-  //         ),
-  //       );
-  //     }
-  //
-  //     value.separated[index] = regulationWithTimeOptions;
-  //     print(regulationWithTimeOptions.timeSlotsByDate);
-  //
-  //     late bool dateSelected;
-  //     try {
-  //       DateTime date = getDate(regulationWithTimeOptions.timeSlotsByDate);
-  //       dateSelected = true;
-  //     } catch (e) {
-  //       dateSelected = false;
-  //     }
-  //
-  //     if (dateSelected) {
-  //       regenerateTimeBlocks();
-  //       print(value.separated);
-  //       print('select time');
-  //
-  //       List<RegulationWithTimeOptions> list = value.separated;
-  //
-  //       print(list);
-  //       // list.removeAt(index);
-  //       for (var e in list) {
-  //         if (list[index] == e) continue;
-  //         e.removeOverlappingSlotsWith(regulationWithTimeOptions);
-  //       }
-  //
-  //       print(list);
-  //       value.separated = list;
-  //       setState(() {});
-  //     }
-  //   }
-  // }
 
   void countFinalVars() {
     finalDuration = 0;

@@ -41,7 +41,6 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
-  late List<Appointment> allAppos;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -62,10 +61,7 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
   @override
   void initState() {
     super.initState();
-    var state = widget.allApposState;
-    if (state is LocalAppointmentsLoaded) {
-      allAppos = state.appointments;
-    }
+
     // allAppos =
     nameController = TextEditingController();
     surnameController = TextEditingController();
@@ -173,43 +169,6 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
     }
   }
 
-  Future<void> fetchAndWait(BuildContext context) async {
-    final bloc = context.read<LocalAppointmentsBloc>();
-    final completer = Completer<bool>();
-    List<Appointment> appos = [];
-    String error = '';
-
-    late final StreamSubscription subscription;
-    subscription = bloc.stream.listen((state) {
-      if (state is LocalAppointmentsLoaded) {
-        appos = state.appointments;
-        completer.complete(true); // Успех
-      } else if (state is LocalAppointmentsError) {
-        error = state.errorMessage;
-        completer.complete(false); // Ошибка
-      }
-      // Можно добавить другие состояния по необходимости
-    });
-
-    bloc.add(FetchAppointmentsData());
-
-    final success = await completer.future;
-    await subscription.cancel();
-
-    if (success) {
-      // Успешно загружено
-      // yourFunction();
-      allAppos = appos;
-      // print(appos);
-      // print('FETCHED');
-    } else {
-      // Обработка ошибки или fallback
-      // handleError();
-      showSnackBar(context: context, text: 'Произошла ошибка: $error');
-      // print('ERROR FETCHING');
-    }
-  }
-
   void createAppos() {
     var selectedRegsWithOption = widget.selectedRegsWithOption;
 
@@ -247,8 +206,10 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
   }
 
   bool doApposOverlap() {
+    List<Appointment> list =
+        (widget.allApposState as LocalAppointmentsLoaded).appointments;
     for (var a in apposToSend) {
-      if (isOverlapping(a, allAppos)) {
+      if (isOverlapping(a, list)) {
         return true;
       }
     }
@@ -452,33 +413,24 @@ class _ContactInfoWidgetState extends State<ContactInfoWidget> {
                             onPressed: !isLoading ||
                                     widget.allApposState
                                         is! LocalAppointmentsLoading
-                                ? () async {
-                                    // context
-                                    //     .read<LocalAppointmentsBloc>()
-                                    //     .add(FetchAppointmentsData());
+                                ? () {
+                                    if (validateAndSave()) {
+                                      createAppos();
 
-                                    await fetchAndWait(context).then(
-                                      (value) {
-                                        if (validateAndSave()) {
-                                          print('after');
-                                          createAppos();
-
-                                          if (doApposOverlap()) {
-                                            showSnackBar(
-                                                context: context,
-                                                text:
-                                                    'На данное время уже появилась запись, попробуйте снова');
-                                            return;
-                                          }
-                                          addAllAppos(apposToSend, (appo) {
-                                            context
-                                                .read<ActionsAppointmentBloc>()
-                                                .add(CreateAppointmentEvent(
-                                                    appointment: appo));
-                                          });
-                                        }
-                                      },
-                                    );
+                                      if (doApposOverlap()) {
+                                        showSnackBar(
+                                            context: context,
+                                            text:
+                                                'На данное время уже появилась запись, попробуйте снова');
+                                        return;
+                                      }
+                                      addAllAppos(apposToSend, (appo) {
+                                        context
+                                            .read<ActionsAppointmentBloc>()
+                                            .add(CreateAppointmentEvent(
+                                                appointment: appo));
+                                      });
+                                    }
                                   }
                                 : null,
                             icon: isLoading
