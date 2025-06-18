@@ -63,8 +63,8 @@ class _TimeSelectionContentState extends State<TimeSelectionContent> {
     super.initState();
     // allAppos = widget.appos;
 
-    datesList =
-        List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
+    datesList = List.generate(
+        6, (index) => DateTime.now().add(Duration(days: index + 1)));
 
     combinedBlock = CombinedRegulationsWithTimeOptions(
       regulations: widget.regs,
