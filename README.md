@@ -4,23 +4,28 @@
 
 ## Средства разработки
 
-В проекте используются ключевые библиотеки:
+### Архитектура
+- [flutter_bloc](https://pub.dev/packages/flutter_bloc) — управление состоянием (BLoC/Cubit).  
+- [go_router](https://pub.dev/packages/go_router) — современный маршрутизатор для Flutter.  
 
-- [google_fonts](https://pub.dev/packages/google_fonts) — подключение шрифтов Google.
-- [go_router](https://pub.dev/packages/go_router) — современный маршрутизатор для Flutter.
-- [firebase_core](https://pub.dev/packages/firebase_core),  
-  [firebase_storage](https://pub.dev/packages/firebase_storage),  
-  [cloud_firestore](https://pub.dev/packages/cloud_firestore) — интеграция с Firebase (база данных,
-  хранилище, core).
-- [flutter_bloc](https://pub.dev/packages/flutter_bloc) — управление состоянием (BLoC/Cubit).
-- [carousel_slider](https://pub.dev/packages/carousel_slider) — создание слайдеров и каруселей.
-- [url_launcher](https://pub.dev/packages/url_launcher) — открытие ссылок и приложений.
-- [telegram_web_app](https://pub.dev/packages/telegram_web_app) — интеграция с Telegram Web Apps.
-- [intl](https://pub.dev/packages/intl) — интернационализация и работа с датами/числами.
-- [mask_text_input_formatter](https://pub.dev/packages/mask_text_input_formatter) — маски для ввода
-  текста.
-- [translit](https://pub.dev/packages/translit) — транслитерация строк.
-- [flutter_markdown](https://pub.dev/packages/flutter_markdown) — рендеринг Markdown в Flutter.
+### Firebase
+- [firebase_core](https://pub.dev/packages/firebase_core) — инициализация Firebase.  
+- [firebase_storage](https://pub.dev/packages/firebase_storage) — облачное хранилище.  
+- [cloud_firestore](https://pub.dev/packages/cloud_firestore) — база данных Firestore.  
+
+### Работа с данными и вводом
+- [intl](https://pub.dev/packages/intl) — интернационализация и работа с датами/числами.  
+- [mask_text_input_formatter](https://pub.dev/packages/mask_text_input_formatter) — маски для ввода текста.  
+- [translit](https://pub.dev/packages/translit) — транслитерация строк.  
+
+### UI и анимации
+- [google_fonts](https://pub.dev/packages/google_fonts) — подключение шрифтов Google.  
+- [carousel_slider](https://pub.dev/packages/carousel_slider) — создание слайдеров и каруселей.  
+- [flutter_markdown](https://pub.dev/packages/flutter_markdown) — рендеринг Markdown в Flutter.  
+
+### Интеграции
+- [url_launcher](https://pub.dev/packages/url_launcher) — открытие ссылок и приложений.  
+- [telegram_web_app](https://pub.dev/packages/telegram_web_app) — интеграция с Telegram Web Apps.  
 
 ## Главный экран
 
